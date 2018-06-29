@@ -65,6 +65,12 @@ class Parser:
 		# self.test();
 		#如果在数据库中能找到visitUrl，说明程序已经运行过了，可以从数据库中恢复现场
 		Utils.log("[I] onExecute()");
+
+		#检查是否有visiting的book
+		visitingBookUrl = self.visitingBookUrl();
+		if visitingBookUrl != None:
+			self.downloadBook(visitingBookUrl);
+
 		#否则从root开始搜索
 		visitUrl = self.nextVisitUrl();
 		if visitUrl == None:
@@ -123,7 +129,8 @@ class Parser:
 			return;
 
 		#检查是否下载过了
-
+		if self.checkDownloadedBookUrl():
+			return;
 
 		Utils.log("[I] on downloadBook() will get soup " + url);
 		bookSoup = Utils.soupUrl(url);
@@ -223,6 +230,12 @@ class Parser:
 	#从数据库中找到一条searchUrl
 	def nextVisitUrl(self):
 		return None;
+
+	def visitingBookUrl(self):
+		return None;
+
+	def checkDownloadedBookUrl(self):
+		return False;
 
 	#从数据库中找到一条书页
 	def nextPageUrl(self):
