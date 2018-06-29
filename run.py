@@ -25,7 +25,6 @@ from src.utils import Utils
 from src.db.BookinfoDb import BookinfoDb
 from src.db.ChapterDb import ChapterDb
 from src.db.VisitUrlDb import *
-from src.db.VisitStateDb import VisitStateDb
 
 from src.utils.Aes import Aes
 
@@ -41,11 +40,8 @@ def test():
 	# chapterDb = ChapterDb(101);
 	# chapterDb.test();
 
-	# visitUrlDb = VisitPageUrl();
-	# visitUrlDb.test();
-
-	visitStateDb = VisitStateDb();
-	visitStateDb.test();
+	visitUrlDb = VisitPageUrl();
+	visitUrlDb.test();
 
 	# Aes.test();
 
