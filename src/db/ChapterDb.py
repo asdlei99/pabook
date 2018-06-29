@@ -10,8 +10,11 @@ class ChapterDb(BaseDb):
 		self.bookId = bookId;
 		if bookId == None:
 			raise Exception(" bookId is None")
-		self.tableName = "chapter_" + str(self.bookId);
+		self._tableName = "chapter_" + str(self.bookId);
 
+	def tableName(self):
+		return self._tableName;
+		
 	#操作bookinfo表
 	def createTableSql(self):
 		return '''
@@ -21,19 +24,19 @@ class ChapterDb(BaseDb):
 					downUrl varchar(256) not null,
 					uniqueKey varchar(32) not null
 				)
-			'''.format(self.tableName);
+			'''.format(self.tableName());
 
 	def dropTableSql(self):
-		return "drop table if exists {}".format(self.tableName);
+		return "drop table if exists {}".format(self.tableName());
 
 	def insertSql(self, model):
-		return '''insert into {} (title, downUrl, uniqueKey) values ("{}", "{}", "{}")'''.format(self.tableName, model.title, model.downUrl, model.uniqueKey);
+		return '''insert into {} (title, downUrl, uniqueKey) values ("{}", "{}", "{}")'''.format(self.tableName(), model.title, model.downUrl, model.uniqueKey);
 
 	def updateSql(self, model):
-		return '''update {} set title="{}", downUrl="{}" where uniqueKey="{}"'''.format(self.tableName, model.title, model.downUrl, model.uniqueKey);
+		return '''update {} set title="{}", downUrl="{}" where uniqueKey="{}"'''.format(self.tableName(), model.title, model.downUrl, model.uniqueKey);
 
 	def deleteSql(self, model):
-		return '''delete from {} where uniqueKey="{}"'''.format(self.tableName, model.uniqueKey);
+		return '''delete from {} where uniqueKey="{}"'''.format(self.tableName(), model.uniqueKey);
 
 	#测试代码
 	def test(self):

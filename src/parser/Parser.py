@@ -13,6 +13,8 @@ from src.model import *
 
 from src.db.BookinfoDb import BookinfoDb
 
+from src.utils.Aes import Aes
+
 class Parser:
 
 	#参数检查
@@ -38,7 +40,7 @@ class Parser:
 			raise Exception("--创建tmpdir失败");
 		self.charset = charset;
 		Utils.charset = charset;
-		self.aecode = aescode;
+		self.aescode = aescode;
 		self.checkInput();
 
 		self.sectionDownloadSuccCount = 0;
@@ -161,7 +163,7 @@ class Parser:
 		c = content;
 		if Utils.isValidStr(self.aescode):
 			c = Aes.encode(c, self.aescode, fileuniquekey);
-		self.storge.pushContent(self, c, fileuniquekey, toDict, complete);
+		self.storge.pushContent(c, fileuniquekey, toDir, complete);
 
 	def _downloadBookImg(self, url, uniqueKey, toDir):
 		content = Utils.readUrl(url);

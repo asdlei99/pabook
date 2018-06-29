@@ -26,7 +26,8 @@ class Aes:
 	@classmethod
 	def encode(cls, content, aescode, uniqueKey):
 		obj = AES.new(cls.aeskey(aescode, uniqueKey), AES.MODE_ECB);
-		c = cls.alignContent(content);
+		c = content.encode("utf-8");
+		c = cls.alignContent(c);
 		e = obj.encrypt(c);
 		return e;
 

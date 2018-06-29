@@ -7,13 +7,17 @@ from src.model.Models import *
 class BookinfoDb(BaseDb):
 	def __init__(self):
 		super(BookinfoDb, self).__init__();
+		self._tableName = "bookinfo";
+
+	def tableName(self):
+		return self._tableName;
 
 	#操作bookinfo表
 	def createTableSql(self):
 		return '''
-			create table if not exists bookinfo(
+			create table if not exists {}(
 				id int auto_increment primary key,
-				bookId varchar(10) not null unique key,
+				bookId varchar(16) not null unique key,
 				uniqueKey varchar(32) not null unique key,
 				title varchar(32) not null,
 				author varchar(8) not null ,
@@ -34,15 +38,15 @@ class BookinfoDb(BaseDb):
 				monthRecommendCount int default 0,
 				weekRecommendCount int default 0
 			);
-			''';
+			'''.format(self.tableName());
 
 	def dropTableSql(self):
-		return "drop table if exists bookinfo";
+		return "drop table if exists {}".format(self.tableName());
 
 	def updateSql(self, bookInfoModel):
 		bookInfoDict = bookInfoModel.toDict(True);
 		attrCount = len(bookInfoDict);
-		sql = "update bookinfo set ";
+		sql = "update {} set ".format(self.tableName());
 		bi = 0;
 		for bk, bv in bookInfoDict.items():
 			needDouhao = bi < attrCount - 1;
@@ -52,22 +56,25 @@ class BookinfoDb(BaseDb):
 		return sql;
 
 	def isExistsWithKey(self, bookUniqueKey):
-		if self.executeSql('''select * from bookinfo where uniqueKey = "{}"'''.format(bookUniqueKey)):
+		if self.executeSql('''select * from {} where uniqueKey = "{}"'''.format(self.tableName(), bookUniqueKey)):
 			return self.fetchOne() != None;
 		else:
 			return False;
 
 	def isExistsWithDownUrl(self, downUrl):
-		if self.executeSql('''select * from bookinfo where downBookUrl = "{}"'''.format(downUrl)):
+		if self.executeSql('''select * from {} where downBookUrl = "{}"'''.format(self.tableName(), downUrl)):
 			oneRet = self.fetchOne();
 			if oneRet == None:
 				return False;
-			elif oneRet[""]
+			elif oneRet["downloadStatus"] == BookDownloadStatus.Success:
+				return True;
+			else:
+				return False;
 		else:
 			return False;
 
 	def deleteSql(self, bookInfoModel):
-		return '''delete from bookinfo where uniqueKey = "{}"'''.format(bookInfoModel.uniqueKey);
+		return '''delete from {} where uniqueKey = "{}"'''.format(self.tableName(), bookInfoModel.uniqueKey);
 
 	def insertSql(self, bookInfoModel):
 		bookInfoDict = bookInfoModel.toDict(True);
@@ -81,7 +88,7 @@ class BookinfoDb(BaseDb):
 			mapValues += "\"{" + bk + "}\"" + (needDouhao and "," or "");
 			bi += 1;
 
-		return '''insert into bookinfo ({}) values ({})'''.format(mapKeys, mapValues).format(**bookInfoDict);
+		return '''insert into {} ({}) values ({})'''.format(self.tableName(), mapKeys, mapValues).format(**bookInfoDict);
 
 	#测试代码
 	def test(self):

@@ -4,7 +4,7 @@ from Parser import Parser
 
 from src.utils import Utils
 
-from src.model import *
+from src.model.Models import *
 
 # http://www.ybdu.com
 class YbduParser(Parser):

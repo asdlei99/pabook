@@ -66,7 +66,13 @@ class Prepare:
 	def onPrepare(self):
 		parserOptions = self.__parseOptions();
 
-		parser = eval(parserOptions["parser"] + '("%s", "%s", "%s", "%s")' % (parserOptions["url"], parserOptions["output"], parserOptions["charset"], parserOptions["aescode"]));
+		parser = None;
+		aescode = parserOptions["aescode"];
+		if aescode == None:
+			parser = eval(parserOptions["parser"] + '("%s", "%s", "%s", None)' % (parserOptions["url"], parserOptions["output"], parserOptions["charset"]));
+		else:
+			parser = eval(parserOptions["parser"] + '("%s", "%s", "%s", "%s")' % (parserOptions["url"], parserOptions["output"], parserOptions["charset"], aescode));
+
 		if not parser: 
 			raise "parser cant init";
 

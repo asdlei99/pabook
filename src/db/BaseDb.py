@@ -20,7 +20,7 @@ class BaseDb(object):
 
 	#删除表
 	def dropTable(self):
-		self.executeSql(self.createTableSql());
+		self.executeSql(self.dropTableSql());
 
 	#插入
 	def insert(self, model):
@@ -33,4 +33,18 @@ class BaseDb(object):
 	#删除
 	def delete(self, model):
 		self.executeSql(self.deleteSql(model));
+
+	#============
+	def createTableSql(self):
+		raise Exception("子类实现");
+	def dropTableSql(self):
+		raise Exception("子类实现");
+	def insertSql(self, model):
+		raise Exception("子类实现");
+	def updateSql(self, model):
+		raise Exception("子类实现");
+	def deleteSql(self, model):
+		raise Exception("子类实现");
+	def tableName(self):
+		raise Exception("子类实现");
 

@@ -7,6 +7,8 @@ import chardet
 
 import urllib2
 
+import bs4
+
 from bs4 import BeautifulSoup
 
 import re

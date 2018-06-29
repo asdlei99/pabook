@@ -24,6 +24,8 @@ from src.utils import Utils
 
 from src.db.BookinfoDb import BookinfoDb
 from src.db.ChapterDb import ChapterDb
+from src.db.VisitUrlDb import *
+from src.db.VisitStateDb import VisitStateDb
 
 from src.utils.Aes import Aes
 
@@ -36,15 +38,21 @@ def test():
 	# dbins = BookinfoDb();
 	# dbins.test();
 
-	chapterDb = ChapterDb(101);
-	chapterDb.test();
+	# chapterDb = ChapterDb(101);
+	# chapterDb.test();
+
+	# visitUrlDb = VisitPageUrl();
+	# visitUrlDb.test();
+
+	visitStateDb = VisitStateDb();
+	visitStateDb.test();
 
 	# Aes.test();
 
 	# BookId.test();
 
 if __name__ == '__main__':
-	test();
-	# Prepare();
+	# test();
+	Prepare();
 else:
 	print("error");

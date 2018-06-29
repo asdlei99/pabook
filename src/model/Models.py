@@ -25,6 +25,7 @@ class BookInfoModel:
 		self.downBookUrl = "";
 		self.downMuluUrl = "";
 		self.uniqueKey = "";
+		self.downloadStatus = BookDownloadStatus.Ongoing;
 
 	def setUniqueKey(self):
 		self.uniqueKey = Utils.md5str(self.category + self.title + self.author);
@@ -62,3 +63,8 @@ class SectionInfoModel:
 
 	def getChapter(self, index):
 		return self.chapters[index];
+
+class VisitUrlModel:
+	def __init__(self, url = None, visiting = None):
+		self.url = url;
+		self.visiting = visiting;
