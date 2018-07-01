@@ -27,14 +27,22 @@ class BookInfoModel:
 		self.uniqueKey = "";
 		self.downloadStatus = BookDownloadStatus.Ongoing;
 
+		self.bookId = -1;
+
 	def setUniqueKey(self):
 		self.uniqueKey = Utils.md5str(self.category + self.title + self.author);
+
+	def applyDict(self, d):
+		attrnames = dir(self);
+		for key, value in d.items():
+			if key in attrnames:
+				setattr(self, key, value);
 
 	def toDict(self, ignoreEmptyStr):
 		attrnames = dir(self);
 		d = {};
 		for n in attrnames:
-			if not n.startswith("_") and n != "toDict" and n != "setUniqueKey":
+			if not n.startswith("_") and n != "toDict" and n != "setUniqueKey" and n != "applyDict":
 				v = getattr(self, n);
 				if isinstance(v, str):
 					if not ignoreEmptyStr or len(v) > 0:
@@ -47,10 +55,17 @@ class BookInfoModel:
 		return str(self.toDict(False));
 
 class ChapterModel:
-	def __init__(self, url, title, uniqueKey):
+	def __init__(self, url = None, title = None, uniqueKey = None):
 		self.downUrl = url;
 		self.title = title;
 		self.uniqueKey = uniqueKey;
+		self.downloaded = -1;
+
+	def applyDict(self, d):
+		attrnames = dir(self);
+		for key, value in d.items():
+			if key in attrnames:
+				setattr(self, key, value);
 
 class SectionInfoModel:
 	def __init__(self):

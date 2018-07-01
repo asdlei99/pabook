@@ -8,6 +8,7 @@ from src.utils import Utils
 class Db:
 	#pymysql接口
 	def __init__(self):
+		Utils.log("[I] init class Db");
 		connConfig = {
 			'host': '127.0.0.1',
 			'user': 'wanghy',
@@ -33,7 +34,12 @@ class Db:
 	def fetchOne(self):
 		return self.cursor.fetchone();
 
+	def fetchAll(self):
+		return self.cursor.fetchall();
+
 	def __del__(self):
+		if Utils != None:
+			Utils.log("[I] class Db dealloc");
 		self.conn.close();
 
 instance = Db();

@@ -12,45 +12,36 @@ class VisitUrlDb(BaseDb):
 	#操作bookinfo表
 	def createTableSql(self):
 		return '''
-				create table {}(
-					id int default 0 not null primary key,
+				create table if not exists {}(
+					id int not null auto_increment primary key,
 					url varchar(256) not null unique key,
-					visiting tinyint not null default 0,
-					bookId varchar(16)
-				)
+					bookId varchar(16),
+					status tinyint default 0
+				);
 			'''.format(self.tableName());
 
 	def dropTableSql(self):
 		return "drop table if exists {}".format(self.tableName());
 
-	def insertSql(self, model):
-		if model.bookId != None:
-			return '''insert into {} (url, visiting, bookId) values ("{}", "{}", "{}")'''.format(self.tableName(), model.url, model.visiting, model.bookId);
-		else:
-			return '''insert into {} (url, visiting) values ("{}", "{}")'''.format(self.tableName(), model.url, model.visiting);
-
-	def updateSql(self, model):
-		if model.bookId != None:
-			return '''update {} set visiting="{}" where url="{}"'''.format(self.tableName(), model.visiting, model.url);
-		else:
-			return '''update {} set visiting="{}", bookId="{}" where url="{}"'''.format(self.tableName(), model.visiting, model.bookId, model.url);
-
-	def deleteSql(self, model):
-		return '''delete from {} where url="{}"'''.format(self.tableName(), model.url);
-
-	def getVisitingUrl(self):
-		self.executeSql("select url from {} where visiting = 1".format(self.tableName()));
-		oneRet = self.fetchOne();
-		if oneRet == None:
-			self.executeSql("select url from {}".format(self.tableName()));
-			oneRet = self.fetchOne();
-		if oneRet == None:
-			return None;
-		else:
-			return oneRet["url"];
-
-	def deleteVisitUrl(self, url):
+	def deleteUrl(self, url):
 		self.executeSql('''delete from {} where url="{}"'''.format(self.tableName(), url));
+
+	def insertUrl(self, url):
+		self.executeSql('''insert into {} (url) values ("{}")'''.format(self.tableName(), url));
+
+	def getOneUrl(self):
+		self.executeSql('''select url from {} where status = 0 limit 1'''.format(self.tableName()));
+		ret = self.fetchOne();
+		if ret != None:
+			return ret["url"];
+		return None;
+
+	def isExistsUrl(self, url):
+		self.executeSql('''select * from {} where url = "{}", status = 0'''.format(self.tableName(), url));
+		return self.fetchOne() != None;
+
+	def setVisited(self, url):
+		self.executeSql('''update {} set status = 1 where url="{}"'''.format(self.tableName(), url));
 
 	#测试代码
 	def test(self):
@@ -67,6 +58,6 @@ class VisitUrlDb(BaseDb):
 
 		# self.delete(visitingModel);
 
-class VisitPageUrl(VisitUrlDb):
+class VisitBookUrlDb(VisitUrlDb):
 	def tableName(self):
-		return "visitpageurl";
+		return "visitbookurl";

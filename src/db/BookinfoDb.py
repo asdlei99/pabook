@@ -5,18 +5,15 @@ from BaseDb import BaseDb
 from src.model.Models import *
 
 class BookinfoDb(BaseDb):
-	def __init__(self):
-		super(BookinfoDb, self).__init__();
-		self._tableName = "bookinfo";
 
 	def tableName(self):
-		return self._tableName;
+		return "bookinfo";
 
 	#操作bookinfo表
 	def createTableSql(self):
 		return '''
 			create table if not exists {}(
-				id int auto_increment primary key,
+				id int not null auto_increment primary key,
 				bookId varchar(16) not null unique key,
 				uniqueKey varchar(32) not null unique key,
 				title varchar(32) not null,
@@ -24,8 +21,8 @@ class BookinfoDb(BaseDb):
 				category varchar(32) not null,
 				des varchar(300) not null,
 				bookImg varchar(256),
-				downBookUrl varchar(256),
-				downMuluUrl varchar(256),
+				downBookUrl varchar(256) unique key,
+				downMuluUrl varchar(256) unique key,
 				wordsCount int default 0,
 				updateTime int default 0,
 				chapterCount int default 0,
@@ -36,7 +33,8 @@ class BookinfoDb(BaseDb):
 				collectionCount int default 0,
 				recommendCount int default 0,
 				monthRecommendCount int default 0,
-				weekRecommendCount int default 0
+				weekRecommendCount int default 0,
+				downloadStatus int default -1
 			);
 			'''.format(self.tableName());
 
@@ -56,22 +54,21 @@ class BookinfoDb(BaseDb):
 		return sql;
 
 	def isExistsWithKey(self, bookUniqueKey):
-		if self.executeSql('''select * from {} where uniqueKey = "{}"'''.format(self.tableName(), bookUniqueKey)):
-			return self.fetchOne() != None;
+		self.executeSql('''select * from {} where uniqueKey = "{}"'''.format(self.tableName(), bookUniqueKey));
+		return self.fetchOne() != None;
+
+	def isAlreadyDownloadWithBookUrl(self, downBookUrl):
+		self.executeSql('''select * from {} where downBookUrl = "{}"'''.format(self.tableName(), downBookUrl))
+		oneRet = self.fetchOne();
+		if oneRet == None:
+			return False;
+		elif oneRet["downloadStatus"] == BookDownloadStatus.Completed:
+			return True;
 		else:
 			return False;
 
-	def isExistsWithDownUrl(self, downUrl):
-		if self.executeSql('''select * from {} where downBookUrl = "{}"'''.format(self.tableName(), downUrl)):
-			oneRet = self.fetchOne();
-			if oneRet == None:
-				return False;
-			elif oneRet["downloadStatus"] == BookDownloadStatus.Success:
-				return True;
-			else:
-				return False;
-		else:
-			return False;
+	def setDownloadStautsForBookUrl(self, downBookUrl, downloadStatus):
+		self.executeSql('''update {} set downloadStatus="{}" where downBookUrl = "{}"'''.format(self.tableName(), downloadStatus, downBookUrl))
 
 	def deleteSql(self, bookInfoModel):
 		return '''delete from {} where uniqueKey = "{}"'''.format(self.tableName(), bookInfoModel.uniqueKey);
@@ -89,6 +86,27 @@ class BookinfoDb(BaseDb):
 			bi += 1;
 
 		return '''insert into {} ({}) values ({})'''.format(self.tableName(), mapKeys, mapValues).format(**bookInfoDict);
+
+	def getBookinfo(self, downBookUrl):
+		self.executeSql('''select * from {} where downBookUrl = "{}"'''.format(self.tableName(), downBookUrl));
+		oneRet = self.fetchOne();
+		if oneRet != None:
+			bookInfo = BookInfoModel();
+			bookInfo.applyDict(oneRet);
+			return bookInfo;
+		return None;
+
+	def getAllBookinfo(self):
+		self.executeSql('''select * from {}'''.format(self.tableName()));
+		ret = self.fetchAll();
+		if ret != None:
+			bookinfos = [];
+			for one in ret:
+				bookInfo = BookInfoModel();
+				bookInfo.applyDict(one);
+				bookinfos.append(bookInfo);
+			return bookinfos;
+		return None;
 
 	#测试代码
 	def test(self):

@@ -25,12 +25,33 @@ from src.utils import Utils
 from src.db.BookinfoDb import BookinfoDb
 from src.db.ChapterDb import ChapterDb
 from src.db.VisitUrlDb import *
+from src.db.KeyValueDb import *
 
 from src.utils.Aes import Aes
 
 from src.Prepare import Prepare
 
 from src.parser import BookId
+
+def dropAllTables():
+	#visiturldb
+	visitUrlDb = VisitUrlDb();
+	visitUrlDb.dropTable();
+
+	visitBookUrlDb = VisitBookUrlDb();
+	visitBookUrlDb.dropTable();
+
+	#keyvalue
+	keyvalueDb = KeyValueDb();
+	keyvalueDb.dropTable();
+
+	#bookinfo
+	bookinfoDb = BookinfoDb();
+	allbookinfo = bookinfoDb.getAllBookinfo();
+	for bookinfo in allbookinfo:
+		chapterDb = ChapterDb(bookinfo.bookId);
+		chapterDb.dropTable();
+	bookinfoDb.dropTable();
 
 def test():
 	Utils.log("--test--");
@@ -40,12 +61,17 @@ def test():
 	# chapterDb = ChapterDb(101);
 	# chapterDb.test();
 
-	visitUrlDb = VisitPageUrl();
-	visitUrlDb.test();
+	# visitUrlDb = VisitBookUrlDb();
+	# visitUrlDb.test();
+
+	# kvDb = KeyValueDb();
+	# kvDb.test();
 
 	# Aes.test();
 
 	# BookId.test();
+
+	dropAllTables();
 
 if __name__ == '__main__':
 	# test();

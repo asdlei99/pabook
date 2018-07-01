@@ -10,4 +10,6 @@ class Enum(tuple):
 #Error表示书籍错误
 BookInfoStatus = Enum(["Ongoing", "Completed", "Error"])
 
-BookDownloadStatus = Enum(["Ongoing", "Fail", "Success"]);
+BookDownloadStatus = Enum(["Ongoing", "Completed"]);
+
+BookVistUrlStatus = Enum(["Ready", "Visited"])

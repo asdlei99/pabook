@@ -96,7 +96,7 @@ class YbduParser(Parser):
 		#字数
 		find = Utils.findAll(r"已写了(\d+)字", str(bookPageSoup));
 		if find and len(find) > 0:
-			self.wordsCount = find[0];
+			model.wordsCount = find[0];
 
 		#检查目录页中的数据
 		metaTags = bookMuluSoup.find_all(lambda t: t.name == "meta" and t.has_attr("property") and Utils.isMatch("og:.+?\"", t["property"]) != None);

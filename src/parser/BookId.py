@@ -1,6 +1,19 @@
 #coding=utf-8
 
-lastBookId = None;
+from src.utils import Utils
+from src.db.KeyValueDb import KeyValueDb
+
+_lastBookId = None;
+
+_kvDb = None;
+
+def init(kvDb):
+	global _kvDb;
+	global _lastBookId;
+	_kvDb = kvDb;
+	id = kvDb.get("lastBookId");
+	if id != None:
+		_lastBookId = int(id);
 
 def checkBookId(bookId):
 	#不能有相邻的相同的数字
@@ -36,12 +49,13 @@ def checkBookId(bookId):
 	return True;
 
 def nextBookId():
+	global _lastBookId;
+	global _kvDb;
 	bookId = None;
-	global lastBookId;
-	if lastBookId == None:
+	if _lastBookId == None:
 		bookId = 101
 	else:
-		bookId = lastBookId + 1;
+		bookId = _lastBookId + 1;
 
 	while True:
 		valid = checkBookId(bookId)
@@ -50,7 +64,9 @@ def nextBookId():
 		else:
 			bookId += 1;
 
-	lastBookId = bookId;
+	_lastBookId = bookId;
+
+	_kvDb.set("lastBookId", str(_lastBookId));
 
 	return bookId;
 

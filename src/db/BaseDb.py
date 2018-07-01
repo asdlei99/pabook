@@ -4,15 +4,26 @@ from src.db import Db
 
 from src.model import *
 
+from src.utils import Utils
+
 class BaseDb(object):
 	def __init__(self):
+		Utils.log("[I] init class " + str(self.__class__));
 		self.db = Db.instance;
+		self.createTable();
+
+	def __del__(self):
+		if Utils != None:
+			Utils.log("[I] dealloc class " + str(self.__class__));
 
 	def executeSql(self, sql):
 		self.db.executeSql(sql);
 
 	def fetchOne(self):
 		return self.db.fetchOne();
+
+	def fetchAll(self):
+		return self.db.fetchAll();
 
 	#创建表
 	def createTable(self):
