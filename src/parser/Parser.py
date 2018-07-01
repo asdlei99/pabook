@@ -272,7 +272,7 @@ class Parser:
 	def nextVisitUrl(self):
 		url = self.visitUrlDb.getOneUrl();
 		if url == None:
-			self.visitUrlDb.insertUrl(self, self.rootUrl);
+			self.visitUrlDb.insertUrl(self.rootUrl);
 			return self.rootUrl;
 		return url;
 

@@ -37,7 +37,7 @@ class VisitUrlDb(BaseDb):
 		return None;
 
 	def isExistsUrl(self, url):
-		self.executeSql('''select * from {} where url = "{}", status = 0'''.format(self.tableName(), url));
+		self.executeSql('''select * from {} where url = "{}" and status = 0'''.format(self.tableName(), url));
 		return self.fetchOne() != None;
 
 	def setVisited(self, url):
