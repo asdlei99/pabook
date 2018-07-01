@@ -206,9 +206,6 @@ class Parser:
 		#移除visiting book url
 		self.removeBookUrl(url);
 
-		Utils.log("------暂时退出------");
-		sys.exit(0);
-
 	#下载封面
 	def pushContent(self, content, fileuniquekey, toDir, complete):
 		c = content;
