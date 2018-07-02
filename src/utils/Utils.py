@@ -78,15 +78,18 @@ def readUrl(url, retryLimit = 10):
     res = None;
     times = 0;
     while res == None and times < retryLimit:
+        resp = None;
         try:
             req = urllib2.Request(url);
-            res = urllib2.urlopen(req).read();
+            resp = urllib2.urlopen(req);
+            res = resp.read();
         except Exception, e:
             logE(e);
-            if isinstance(e, urllib2.URLError):
-                break;
             if isinstance(e, urllib2.HTTPError) and e.code == 404:
                 break;
+        finally:
+            if resp != None:
+                resp.close();
         times += 1;
         if times > 1:
             log("[E] readUrl retry times(%s) to download url(%s)" % (str(times), str(url)));
