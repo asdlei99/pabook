@@ -358,7 +358,7 @@ class Parser:
 
 	def isValidVisitUrl(self, url):
 		valid = self.host in url and not self.ignoreVisitUrl(url);
-		valid = self.visitUrlDb.isExistsUrl(url);
+		valid = valid and not self.visitUrlDb.isExistsUrl(url);
 		return valid;
 
 	'''
