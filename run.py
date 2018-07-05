@@ -36,48 +36,48 @@ from src.parser import BookId
 from src.utils import Log
 
 def dropAllTables():
-	#visiturldb
-	visitUrlDb = VisitUrlDb();
-	visitUrlDb.dropTable();
+    #visiturldb
+    visitUrlDb = VisitUrlDb();
+    visitUrlDb.dropTable();
 
-	visitBookUrlDb = VisitBookUrlDb();
-	visitBookUrlDb.dropTable();
+    visitBookUrlDb = VisitBookUrlDb();
+    visitBookUrlDb.dropTable();
 
-	#keyvalue
-	keyvalueDb = KeyValueDb();
-	keyvalueDb.dropTable();
+    #keyvalue
+    keyvalueDb = KeyValueDb();
+    keyvalueDb.dropTable();
 
-	#bookinfo
-	bookinfoDb = BookinfoDb();
-	allbookinfo = bookinfoDb.getAllBookinfo();
-	for bookinfo in allbookinfo:
-		chapterDb = ChapterDb(bookinfo.bookId);
-		chapterDb.dropTable();
-	bookinfoDb.dropTable();
+    #bookinfo
+    bookinfoDb = BookinfoDb();
+    allbookinfo = bookinfoDb.getAllBookinfo();
+    for bookinfo in allbookinfo:
+        chapterDb = ChapterDb(bookinfo.bookId);
+        chapterDb.dropTable();
+    bookinfoDb.dropTable();
 
 def test():
-	Log.I("--test--");
-	# dbins = BookinfoDb();
-	# dbins.test();
+    Log.I("--test--");
+    # dbins = BookinfoDb();
+    # dbins.test();
 
-	# chapterDb = ChapterDb(101);
-	# chapterDb.test();
+    # chapterDb = ChapterDb(101);
+    # chapterDb.test();
 
-	# visitUrlDb = VisitBookUrlDb();
-	# visitUrlDb.test();
+    # visitUrlDb = VisitBookUrlDb();
+    # visitUrlDb.test();
 
-	# kvDb = KeyValueDb();
-	# kvDb.test();
+    # kvDb = KeyValueDb();
+    # kvDb.test();
 
-	# Aes.test();
+    # Aes.test();
 
-	# BookId.test();
+    # BookId.test();
 
-	# dropAllTables();
-	Log.test();
+    # dropAllTables();
+    Log.test();
 
 if __name__ == '__main__':
-	# test();
-	Prepare();
+    # test();
+    Prepare();
 else:
-	print("error");
+    print("error");
