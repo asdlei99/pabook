@@ -26,6 +26,7 @@ from src.db.BookinfoDb import BookinfoDb
 from src.db.ChapterDb import ChapterDb
 from src.db.VisitUrlDb import *
 from src.db.KeyValueDb import *
+from src.db import Db
 
 from src.utils.Aes import Aes
 
@@ -36,24 +37,13 @@ from src.parser import BookId
 from src.utils import Log
 
 def dropAllTables():
-    #visiturldb
-    visitUrlDb = VisitUrlDb();
-    visitUrlDb.dropTable();
-
-    visitBookUrlDb = VisitBookUrlDb();
-    visitBookUrlDb.dropTable();
-
-    #keyvalue
-    keyvalueDb = KeyValueDb();
-    keyvalueDb.dropTable();
-
-    #bookinfo
-    bookinfoDb = BookinfoDb();
-    allbookinfo = bookinfoDb.getAllBookinfo();
-    for bookinfo in allbookinfo:
-        chapterDb = ChapterDb(bookinfo.bookId);
-        chapterDb.dropTable();
-    bookinfoDb.dropTable();
+    Db.instance.executeSql('''show tables;''');
+    ret = Db.instance.fetchAll();
+    for item in ret:
+        for k, v in item.items():
+            Db.instance.executeSql('''drop table if exists {};'''.format(v));
+            Log.I("droping table " + str(v));
+    Log.I("droped all tables finished");
 
 def test():
     Log.I("--test--");
@@ -74,7 +64,7 @@ def test():
     # BookId.test();
 
     # dropAllTables();
-    Log.test();
+    # Log.test();
 
 if __name__ == '__main__':
     # test();
