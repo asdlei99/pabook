@@ -20,61 +20,53 @@ from src.utils.Aes import Aes
 
 import BookId
 
+from src.Config import Config
+
+from src.utils import Log
+
 class Parser:
 
-	#参数检查
-	def checkInput(self):
-		if not Utils.isValidUrl(self.rootUrl):
-			raise Exception("rootUrl is not valid");
-		elif not Utils.isValidStr(self.outPath):
-			raise Exception("outPath is not valid");
-		elif not Utils.isValidStr(self.charset):
-			raise Exception("charset is not valid");
-
 	#构造函数
-	def __init__(self, rootUrl, outPath, charset, aescode):
-		self.rootUrl = rootUrl;
+	def __init__(self):
+		cfg = Config.shared;
 
-		urlParseResult = urlparse.urlsplit(rootUrl);
-		self.scheme = urlParseResult.scheme;
-		self.host = urlParseResult.netloc;
+		self.rootUrl = cfg.rootUrl;
 
-		self.outPath = outPath;
-		self.tmpPath = outPath + os.sep + ".tmp";
-		if not Utils.createDir(self.tmpPath):
-			raise Exception("--创建tmpdir失败");
-		self.charset = charset;
-		Utils.charset = charset;
-		self.aescode = aescode;
-		self.checkInput();
+		self.scheme = cfg.scheme;
+		self.host = cfg.host;
+
+		self.outPath = cfg.outPath;
+		self.tmpPath = cfg.tmpPath;
+		self.charset = cfg.charset;
+		self.aescode = cfg.aescode;
 
 		self.sectionDownloadSuccCount = 0;
 		self.sectionDownloadFailedCount = 0;
 
-		self.bookDb = BookinfoDb();
-		self.visitUrlDb = VisitUrlDb();
-		self.visitBookUrlDb = VisitBookUrlDb();
-		self.kvDb = KeyValueDb();
+		self.bookDb = cfg.bookDb;
+		self.visitUrlDb = cfg.visitUrlDb;
+		self.visitBookUrlDb = cfg.visitBookUrlDb;
+		self.kvDb = cfg.kvDb;
 
-		BookId.init(self.kvDb);
+		self.storge = cfg.storge;
 
-		Utils.log("[I] Parser.inited");
+		Log.D("[I] Parser.inited");
 
 	#析构函数
 	def __del__(self):
-		Utils.log("[I] Parser dealloc");
+		Log.D("[I] Parser dealloc");
 
 	#测试
 	def test(self):
 		pat = r".+?/xiazai/\d+/\d+/?$";
-		Utils.log(re.compile(pat).match("https://www.ybdu.com/xiazai/15/15360/"));
+		Log.D(re.compile(pat).match("https://www.ybdu.com/xiazai/15/15360/"));
 		sys.exit(1);
 
 	#入口函数
 	def execute(self):
 		# self.test();
 		#如果在数据库中能找到visitUrl，说明程序已经运行过了，可以从数据库中恢复现场
-		Utils.log("[I] onExecute()");
+		Log.I("[I] onExecute()");
 
 		#检查是否有visiting的book
 		visitingBookUrl = self.visitingBookUrl();
@@ -90,7 +82,7 @@ class Parser:
 		visitUrl = self.nextVisitUrl();
 		self.visit(visitUrl);
 
-		Utils.log("[I] willVisitNext");
+		Log.I("[I] willVisitNext");
 		#处理下一个
 		while True:
 			visitUrl = self.nextVisitUrl();
@@ -99,7 +91,7 @@ class Parser:
 			else:
 				break;
 
-		Utils.log("[I] willVisitNextPageUrl");
+		Log.I("[I] willVisitNextPageUrl");
 		#网页遍历完成
 		while True:
 			bookUrl = self.nextPageUrl();
@@ -107,23 +99,23 @@ class Parser:
 				self.downloadBook(bookUrl);
 			else:
 				break;
-		Utils.log("------parse finished------");
+		Log.I("------parse finished------");
 
 	#开始搜索某个url
 	#将url页内包含的所有url都记录下来
 	#将url页内包含所有的书页都记录并下载下来
 	def visit(self, url):
-		Utils.log("[I] on visit() " + str(url));
+		Log.I("[I] on visit() " + str(url));
 		self.setVisitingUrl(url);
 		soup = Utils.soupUrl(url);
 		if not soup:
-			Utils.log("[W] on visit() soup is None " + str(url));
+			Log.W("[W] on visit() soup is None " + str(url));
 			return;
-		Utils.log("[I] on visit() did get soup");
+		Log.I("[I] on visit() did get soup");
 		#将本页所有url放入数据库中
 		urls = self.addUrlsFromSoup(soup, url);
 		if not Utils.isValidArr(urls):
-			Utils.log("[W] on visit() urls not found");
+			Log.W("[W] on visit() urls not found");
 			return;
 		#获取匹配的书页
 		bookUrls = self.addBookPageUrls(urls);
@@ -134,12 +126,12 @@ class Parser:
 
 		self.removeVisitUrl(url);
 
-		Utils.log("[I] on visit() finished " + str(url));
+		Log.I("[I] on visit() finished " + str(url));
 
 
 	#下载book信息
 	def downloadBook(self, url):
-		Utils.log("[I] on downloadBook() " + str(url));
+		Log.I("[I] on downloadBook() " + str(url));
 
 		#检查是否下载过了
 		if self.checkDownloadedBookUrl(url):
@@ -162,17 +154,17 @@ class Parser:
 				sectionInfo.bookInfo = bookInfo;
 
 		if bookInfo == None :
-			Utils.log("[I] on downloadBook() will get soup " + url);
+			Log.I("[I] on downloadBook() will get soup " + url);
 			bookSoup = Utils.soupUrl(url);
-			Utils.log("[I] on downloadBook() did get soup (%s) %s " % (str(bookSoup != None), str(url)));
+			Log.I("[I] on downloadBook() did get soup (%s) %s " % (str(bookSoup != None), str(url)));
 			if bookSoup != None:
-				Utils.log("[I] on downloadBook() will get muluSoup");
+				Log.I("[I] on downloadBook() will get muluSoup");
 				muluUrl = self.bookMuluUrl(bookSoup);
 				muluSoup = Utils.soupUrl(muluUrl);
-				Utils.log("[I] on downloadBook() did get muluSoup %s" % (str(muluSoup != None)));
+				Log.I("[I] on downloadBook() did get muluSoup %s" % (str(muluSoup != None)));
 				if muluSoup != None:
 					bookInfo = self.bookInfo(bookSoup, muluSoup);
-					Utils.log("[I] on downloadBook get bookInfo " + str(bookInfo));
+					Log.I("[I] on downloadBook get bookInfo " + str(bookInfo));
 					if bookInfo != None:
 						bookInfo.setUniqueKey();
 						bookInfo.downBookUrl = url;
@@ -220,13 +212,13 @@ class Parser:
 		self.pushContent(content, uniqueKey, toDir, None);
 
 	def downloadBookImg(self, url, toDir):
-		Utils.log("[I] dowlonad bookImg " + url);
+		Log.I("[I] dowlonad bookImg " + url);
 		uniqueKey = Utils.md5str(url);
 		self.storge.checkFileExists(uniqueKey, toDir, lambda exists, fileurl: not exists and self._downloadBookImg(url, uniqueKey, toDir))
 
 	#下载章节
 	def onDownloadSectionCompleted(self, idx, uniqueKey, succ, fileurl):
-		Utils.log("[I] download section(%s) completed succ(%s) file(%s)" % (str(idx), str(succ), str(fileurl)));
+		Log.I("[I] download section(%s) completed succ(%s) file(%s)" % (str(idx), str(succ), str(fileurl)));
 		if succ:
 			self.sectionDownloadSuccCount += 1;
 			self.chapterDb.setDownloaded(uniqueKey, 1);
@@ -248,21 +240,21 @@ class Parser:
 		self.pushContent(content, uniqueKey, toDir, lambda succ, fileurl: self.onDownloadSectionCompleted(idx, uniqueKey, succ, fileurl));
 
 	def downloadOneSection(self, idx, oneSectionModel, toDir):
-		Utils.log("[I] downloading section(%s) (%s) (%s)" % (str(idx), str(oneSectionModel.title), str(oneSectionModel.downUrl)));
+		Log.I("[I] downloading section(%s) (%s) (%s)" % (str(idx), str(oneSectionModel.title), str(oneSectionModel.downUrl)));
 		uniqueKey = oneSectionModel.uniqueKey;
 		url = oneSectionModel.downUrl;
 		self.storge.checkFileExists(oneSectionModel.uniqueKey, toDir, lambda exists, fileurl: not exists and (self._downloadOneSection(idx, url, uniqueKey, toDir) or True) or self.onDownloadSectionCompleted(idx, uniqueKey, True, fileurl));
 
 	def downloadSection(self, sectionInfo):
 		sectionCount = len(sectionInfo.chapters);
-		Utils.log("[I] on downloadSection() enter will download section count %s" % (str(sectionCount)));
+		Log.I("[I] on downloadSection() enter will download section count %s" % (str(sectionCount)));
 		self.sectionDownloadSuccCount = 0;
 		self.sectionDownloadFailedCount = 0;
 		toDir = sectionInfo.bookInfo.uniqueKey;
 		for i in range(0, sectionCount):
 			self.downloadOneSection(i, sectionInfo.chapters[i], toDir);
 
-		Utils.log("[I] on downloadSection() exit download all section(%s) succ section(%s) failed section(%s)" % (str(sectionCount), str(self.sectionDownloadSuccCount), str(self.sectionDownloadFailedCount)));
+		Log.I("[I] on downloadSection() exit download all section(%s) succ section(%s) failed section(%s)" % (str(sectionCount), str(self.sectionDownloadSuccCount), str(self.sectionDownloadFailedCount)));
 
 	'''
 	===========================================

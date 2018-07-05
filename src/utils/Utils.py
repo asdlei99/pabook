@@ -20,7 +20,6 @@ import md5
 reload(sys);
 sys.setdefaultencoding("utf-8");
 
-charset = "utf-8";
 #打印log
 
 def log(msg):
@@ -142,7 +141,6 @@ def replaceAll(content, pat, replace):
     if content == None:
         return;
     return re.sub(pat, replace, content);
-
 
 def isValidUrl(url):
     return isValidStr(url) and isMatch(r"http[s]?://.+", url);

@@ -5,10 +5,12 @@ import pymysql.cursors
 
 from src.utils import Utils
 
+from src.utils import Log
+
 class Db:
 	#pymysql接口
 	def __init__(self):
-		Utils.log("[I] init class Db");
+		Log.D("[I] init class Db");
 		connConfig = {
 			'host': '127.0.0.1',
 			'user': 'wanghy',
@@ -24,11 +26,11 @@ class Db:
 	def executeSql(self, sql):
 		try:
 			self.cursor.execute(sql);
-			Utils.log("[I] 执行 " + sql.strip() + " 成功");
+			Log.D("[I] 执行 " + sql.strip() + " 成功");
 			return True;
 		except Exception as e:
-			Utils.log("[I] 执行 " + sql.strip() + " 失败");
-			Utils.logE(e);
+			Log.W("[I] 执行 " + sql.strip() + " 失败");
+			Log.Exc(e);
 		return False;
 
 	def fetchOne(self):
@@ -38,8 +40,7 @@ class Db:
 		return self.cursor.fetchall();
 
 	def __del__(self):
-		if Utils != None:
-			Utils.log("[I] class Db dealloc");
+		Log.D("[I] class Db dealloc");
 		self.conn.close();
 
 instance = Db();

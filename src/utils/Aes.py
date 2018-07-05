@@ -2,12 +2,13 @@
 
 from Crypto.Cipher import AES
 from src.utils import Utils
+from src.utils import Log
 
 class Aes:
 	@classmethod
 	def aeskey(cls, aescode, uniqueKey):
 		key = Utils.md5str(aescode + uniqueKey);
-		Utils.log(" md5 key = " + str(key));
+		Log.D(" md5 key = " + str(key));
 		return key;
 
 	@classmethod
@@ -44,7 +45,7 @@ class Aes:
 		s = "helloworld~~~";
 
 		encoded = cls.encode(s, aescode, uniqueKey);
-		Utils.log("encode result = " + str(encoded));
+		Log.D("encode result = " + str(encoded));
 
 		decoded = cls.decode(encoded, aescode, uniqueKey);
-		Utils.log("decode result = " + str(decoded));
+		Log.D("decode result = " + str(decoded));

@@ -6,9 +6,11 @@ from src.utils import Utils
 
 import os
 
+from src.utils import Log
+
 class FileStorge(Storge):
 	def __init__(self, outPath):
-		Utils.log("[I] FileStorge inited");
+		Log.D("[I] FileStorge inited");
 		super(FileStorge, self).__init__(outPath);
 		self.filespath = self.outPath + os.sep + "files";
 		Utils.createDir(self.filespath);

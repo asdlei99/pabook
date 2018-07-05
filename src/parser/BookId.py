@@ -42,7 +42,7 @@ def checkBookId(bookId):
 				return False;
 		llc = lc;
 		lc = c;
-	#检查是否重复，不检查了，搞那么复杂
+	#检查是否重复
 	for i in range(0, idlen / 2):
 		if idstr[0:i+1] * 2 in idstr:
 			return False;

@@ -1,3 +1,3 @@
 #coding=utf-8
 
-__all__ = ["Aes", "Utils"];
+__all__ = ["Aes", "Utils", "Log"];

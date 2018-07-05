@@ -14,6 +14,10 @@ from src.storge.Storge import *
 
 from src.utils import Utils
 
+from src.Config import Config
+
+from src.utils import Log
+
 class Prepare:
 	def __parseOptions(self):
 		parser = OptionParser();
@@ -63,22 +67,27 @@ class Prepare:
 	def __init__(self):
 		self.onPrepare();
 
-	def onPrepare(self):
-		parserOptions = self.__parseOptions();
+	def createConfig(self):
+		Config.shared = Config(**self.__parseOptions());
 
-		parser = None;
-		aescode = parserOptions["aescode"];
-		if aescode == None:
-			parser = eval(parserOptions["parser"] + '("%s", "%s", "%s", None)' % (parserOptions["url"], parserOptions["output"], parserOptions["charset"]));
-		else:
-			parser = eval(parserOptions["parser"] + '("%s", "%s", "%s", "%s")' % (parserOptions["url"], parserOptions["output"], parserOptions["charset"], aescode));
+	def createParser(self):
+		#创建parser
+		parser = eval(Config.shared.parser + "()");
 
 		if not parser: 
 			raise "parser cant init";
 
-		parser.storge = parserOptions["storge"];
-
-		if parserOptions["type"] == "all":
+		if Config.shared.parseType == "all":
 			parser.execute();
 		else:
-			parser.downloadBook(parserOptions["url"]);
+			parser.downloadBook(Config.shared.rootUrl);
+
+	def onPrepare(self):
+		self.createConfig();
+		# self.test();
+		self.createParser()
+
+	def test(self):
+		Log.test();
+
+

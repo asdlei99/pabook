@@ -6,6 +6,8 @@ from src.utils import Utils
 
 from src.model.Models import *
 
+from src.utils import Log
+
 # http://www.ybdu.com
 class YbduParser(Parser):
 	def bookPageUrls(self, urls):
@@ -13,14 +15,14 @@ class YbduParser(Parser):
 		return filter(lambda url: Utils.isMatch(pat, url) , urls);
 
 	def bookMuluUrl(self, bookPageSoup):
-		Utils.log("[D] bookMuluSoup input = None " + str(bookPageSoup == None));
+		Log.D("[D] bookMuluSoup input = None " + str(bookPageSoup == None));
 		spans = Utils.findAllClassTag(bookPageSoup, "span", "btopt");
 		if len(spans) <= 0 or len(spans[0].contents) <= 0:
 			return None;
 		span = spans[0];
 		a = span.contents[0];
 		url = a["href"];
-		Utils.log("[D] muluurl = " + str(url));
+		Log.D("[D] muluurl = " + str(url));
 		return url;
 
 	def ignoreVisitUrl(self, url):
@@ -61,7 +63,7 @@ class YbduParser(Parser):
 				break;
 
 		if not setted:
-			Utils.log("[W] 未完全设置tljtag "+ str(tag));
+			Log.W("[W] 未完全设置tljtag "+ str(tag));
 
 	def _checkMetaTag(self, tag, model):
 		metaMap = {
@@ -83,10 +85,10 @@ class YbduParser(Parser):
 				break;
 
 		if not setted:
-			Utils.log("[W] 未完全设置metatag "+ str(tag));
+			Log.W("[W] 未完全设置metatag "+ str(tag));
 
 	def bookInfo(self, bookPageSoup, bookMuluSoup):
-		Utils.log("[I] on get bookInfo ");
+		Log.I("[I] on get bookInfo ");
 		model = BookInfoModel();
 		#检查书页中的tlj标签
 		tLJTags = Utils.findAllClassTag(bookPageSoup, "div", "tLJ");
@@ -106,7 +108,7 @@ class YbduParser(Parser):
 		return model;
 
 	def sectionInfo(self, bookInfo, muluUrl, bookMuluSoup):
-		Utils.log("[I] on get sectionInfo");
+		Log.I("[I] on get sectionInfo");
 		model = SectionInfoModel();
 		model.bookInfo = bookInfo;
 
@@ -142,7 +144,7 @@ class YbduParser(Parser):
 				part = c;
 				part = part.strip();
 				if "全本小说" in part:
-					Utils.log("[W] ignore line " + str(part));
+					Log.I("[W] ignore line " + str(part));
 					continue;
 				if len(part) > 0:
 					content += part + "\n";

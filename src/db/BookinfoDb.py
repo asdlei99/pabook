@@ -4,6 +4,8 @@ from BaseDb import BaseDb
 
 from src.model.Models import *
 
+from src.utils import Log
+
 class BookinfoDb(BaseDb):
 
 	def tableName(self):
@@ -119,7 +121,7 @@ class BookinfoDb(BaseDb):
 		bookInfoModel.des = "斗气大法";
 		bookInfoModel.setUniqueKey();
 
-		Utils.log(" --- toDict = " + str(bookInfoModel.toDict(True)));
+		Log.D(" --- toDict = " + str(bookInfoModel.toDict(True)));
 
 		# self.bookInfoDelete(bookInfoModel);
 		self.insert(bookInfoModel);

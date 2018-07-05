@@ -4,6 +4,8 @@ from BaseDb import BaseDb
 
 from src.model.Models import *
 
+from src.utils import Log
+
 class VisitUrlDb(BaseDb):
 
 	def tableName(self):
@@ -54,7 +56,7 @@ class VisitUrlDb(BaseDb):
 
 		self.update(visitingModel);
 
-		Utils.log(" -- test visiting url = " + str(self.getVisitingUrl()));
+		Log.D(" -- test visiting url = " + str(self.getVisitingUrl()));
 
 		# self.delete(visitingModel);
 

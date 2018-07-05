@@ -3,6 +3,7 @@
 from BaseDb import BaseDb
 
 from src.model.Models import *
+from src.utils import Log
 
 class KeyValueDb(BaseDb):
 
@@ -50,5 +51,5 @@ class KeyValueDb(BaseDb):
 		self.set("testkey", "testValue");
 		self.set("testkey", None);
 		self.set("testkey", "testValue");
-		Utils.log(str(self.get("testkey")));
-		Utils.log(str(self.get("testkey1")));
+		Log.D(str(self.get("testkey")));
+		Log.D(str(self.get("testkey1")));

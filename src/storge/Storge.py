@@ -4,9 +4,11 @@ from src.utils import Utils
 
 import os
 
+from src.utils import Log
+
 class Storge(object):
 	def __init__(self, outPath):
-		Utils.log("[I] Storge inited");
+		Log.D("[I] Storge inited");
 		self.outPath = outPath;
 
 	def pushFile(self, filepath, fileuniquekey, toDir, complete):

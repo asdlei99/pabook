@@ -33,6 +33,8 @@ from src.Prepare import Prepare
 
 from src.parser import BookId
 
+from src.utils import Log
+
 def dropAllTables():
 	#visiturldb
 	visitUrlDb = VisitUrlDb();
@@ -54,7 +56,7 @@ def dropAllTables():
 	bookinfoDb.dropTable();
 
 def test():
-	Utils.log("--test--");
+	Log.I("--test--");
 	# dbins = BookinfoDb();
 	# dbins.test();
 
@@ -71,7 +73,8 @@ def test():
 
 	# BookId.test();
 
-	dropAllTables();
+	# dropAllTables();
+	Log.test();
 
 if __name__ == '__main__':
 	# test();

@@ -6,15 +6,17 @@ from src.model import *
 
 from src.utils import Utils
 
+from src.utils import Log
+
 class BaseDb(object):
 	def __init__(self):
-		Utils.log("[I] init class " + str(self.__class__));
+		Log.D("init class " + str(self.__class__));
 		self.db = Db.instance;
 		self.createTable();
 
 	def __del__(self):
 		if Utils != None:
-			Utils.log("[I] dealloc class " + str(self.__class__));
+			Log.D("dealloc class " + str(self.__class__));
 
 	def executeSql(self, sql):
 		self.db.executeSql(sql);
