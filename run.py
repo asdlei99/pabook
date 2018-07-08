@@ -3,9 +3,9 @@
 
 '''
 1. 安装最新版本pip
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python get-pip.py
 2. pip install PyMySQL
-3. brew install mysql
+3. 安装mysql并启动，mysql中建立一个名字为book的数据库
 '''
 
 '''
@@ -81,23 +81,23 @@ def test():
 
     # BookId.test();
 
-    # dropAllTables();
+    dropAllTables();
     # Log.test();
-    ak = "qiniu access key";
-    sk = "qiniu secret key";
-    bk = "qiniu bucket name";
-    qn = Auth(ak, sk);
-    key = "logs/test-log1.txt";
-    token = qn.upload_token(bk, key, 3600);
-    ret, info = put_file(token, key, "./out/logs/error/log-error-20180706000000.txt")
-    Log.D(str(ret));
-    Log.D(str(info));
+    # ak = "qiniu access key";
+    # sk = "qiniu secret key";
+    # bk = "qiniu bucket name";
+    # qn = Auth(ak, sk);
+    # key = "logs/test-log1.txt";
+    # token = qn.upload_token(bk, key, 3600);
+    # ret, info = put_file(token, key, "./out/logs/error/log-error-20180706000000.txt")
+    # Log.D(str(ret));
+    # Log.D(str(info));
 
-    bkManager = BucketManager(qn);
-    ret, resp = bkManager.stat(bk, key);
-    Log.D(str(ret) + " ~~~~ " + str(resp));
-    ret1, resp1 = bkManager.stat(bk, "asdasdas");
-    Log.D(str(ret1) + " ~~~~ " + str(resp1));
+    # bkManager = BucketManager(qn);
+    # ret, resp = bkManager.stat(bk, key);
+    # Log.D(str(ret) + " ~~~~ " + str(resp));
+    # ret1, resp1 = bkManager.stat(bk, "asdasdas");
+    # Log.D(str(ret1) + " ~~~~ " + str(resp1));
 
     # s3 = boto3.resource("s3");
     # bucket = s3.Bucket("aw-kaso");

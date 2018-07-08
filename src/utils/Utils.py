@@ -3,8 +3,6 @@
 import sys, os, json
 import traceback
 
-import chardet
-
 import urllib2
 
 import bs4
