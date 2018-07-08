@@ -2,26 +2,18 @@
 
 from optparse import OptionParser
 
-from src.parser.YbduParser import YbduParser
-
-from src.storge import *
-
 import os
 
 import urlparse
 
-from src.storge.Storge import *
-
-from src.utils import Utils
+from src.utils import Utils, Log
 
 from src.Options import Options
 
-from src.utils import Log
-
 class Prepare:
-    def __parseOptions(self):
+    def _parseOptions(self):
         parser = OptionParser();
-        parser.add_option("-r", "--url", dest="url", help="download web url");#download url
+        parser.add_option("-u", "--url", dest="url", help="download web url");#download url
         parser.add_option("-o", "--output", dest="output", help="output dir");#输出文件夹路径
         parser.add_option("-p", "--parser", dest="parser", help="parser name");#解析器类名
         parser.add_option("-c", "--charset", default="utf-8", dest="charset", help="sit charset");#内容读取charset
@@ -45,6 +37,7 @@ class Prepare:
         if not options.type or len(options.type) == 0 or (options.type != "all" and options.type != "single"):
             parser.error(" need --type 'single' or 'all'");
 
+        exec("from src.storge." + options.storge + " import " + options.storge);
         storgeInstance = eval(options.storge + '("%s")' % (options.output));
 
         if storgeInstance == None:
@@ -68,11 +61,13 @@ class Prepare:
         self.onPrepare();
 
     def createOptions(self):
-        Options.shared = Options(**self.__parseOptions());
+        Options.shared = Options(**self._parseOptions());
 
     def createParser(self):
         #创建parser
-        parser = eval(Options.shared.parser + "()");
+        parserName = Options.shared.parser;
+        exec("from src.parser." + parserName + " import " + parserName);
+        parser = eval(parserName + "()");
 
         if not parser: 
             raise "parser cant init";

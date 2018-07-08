@@ -50,6 +50,8 @@ from src.parser import BookId
 
 from src.utils import Log
 
+import sys
+
 #from qiniu import Auth, put_file, etag, BucketManager
 # import boto3
 # from botocore.exceptions import ClientError
@@ -116,6 +118,9 @@ def test():
     # # data = open("./out/logs/error/log-error-20180706000000.txt", "rb");
     # ret = bucket.put_object(Key="test3.txt", Body="hello world");
     # Log.D(" -- upload file ret="+str(ret));
+
+reload(sys);
+sys.setdefaultencoding("utf-8");
 
 if __name__ == '__main__':
     # test();
