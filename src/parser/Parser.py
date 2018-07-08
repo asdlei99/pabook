@@ -198,17 +198,17 @@ class Parser:
         self.removeBookUrl(url);
 
     #下载封面
-    def pushContent(self, content, fileuniquekey, toDir, complete):
+    def pushContent(self, content, fileuniquekey, toDir, needEncode, complete):
         c = content;
         if Utils.isValidStr(self.aescode):
-            c = Aes.encode(c, self.aescode, fileuniquekey);
+            c = Aes.encode(c, self.aescode, fileuniquekey, needEncode);
         self.storge.pushContent(c, fileuniquekey, toDir, complete);
 
     def _downloadBookImg(self, url, uniqueKey, toDir):
         content = Utils.readUrl(url);
         if content == None:
             return;
-        self.pushContent(content, uniqueKey, toDir, None);
+        self.pushContent(content, uniqueKey, toDir, False, None);
 
     def downloadBookImg(self, url, toDir):
         Log.I("[I] dowlonad bookImg " + url);
@@ -236,7 +236,7 @@ class Parser:
             self.onDownloadSectionCompleted(idx, uniqueKey, False);
             return;
 
-        self.pushContent(content, uniqueKey, toDir, lambda succ: self.onDownloadSectionCompleted(idx, uniqueKey, succ));
+        self.pushContent(content, uniqueKey, toDir, True, lambda succ: self.onDownloadSectionCompleted(idx, uniqueKey, succ));
 
     def downloadOneSection(self, idx, oneSectionModel, toDir):
         Log.I("[I] downloading section(%s) (%s) (%s)" % (str(idx), str(oneSectionModel.title), str(oneSectionModel.downUrl)));

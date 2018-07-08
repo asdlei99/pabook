@@ -25,17 +25,21 @@ class Aes:
         return content[:-padding];
 
     @classmethod
-    def encode(cls, content, aescode, uniqueKey):
+    def encode(cls, content, aescode, uniqueKey, needEncode = True):
         obj = AES.new(cls.aeskey(aescode, uniqueKey), AES.MODE_ECB);
-        c = content.encode("utf-8");
+        c = content;
+        if needEncode:
+            c = c.encode("utf-8");
         c = cls.alignContent(c);
         e = obj.encrypt(c);
         return e;
 
     @classmethod
-    def decode(cls, content, aescode, uniqueKey):
+    def decode(cls, content, aescode, uniqueKey, needDecode = True):
         obj = AES.new(cls.aeskey(aescode, uniqueKey), AES.MODE_ECB);
-        c = obj.decrypt(content).decode();
+        c = obj.decrypt(content);
+        if needDecode:
+            c = c.decode()
         return cls.dealignContent(c);
 
     @classmethod
@@ -49,3 +53,26 @@ class Aes:
 
         decoded = cls.decode(encoded, aescode, uniqueKey);
         Log.D("decode result = " + str(decoded));
+
+        #图片测试
+        from Config import Config
+        import os
+        jpgFile = Config.shared.outPath + os.sep + "nocover.jpg";
+        jpgFd = open(jpgFile, "r");
+        jpgData = jpgFd.read();
+        jpgFd.close();
+        
+        encodeJpgData = cls.encode(jpgData, aescode, uniqueKey, False);
+        jpgFd = open(Config.shared.outPath + os.sep + "nocover-encode.jpg", "w");
+        jpgFd.write(encodeJpgData);
+        jpgFd.flush();
+        jpgFd.close();
+
+        decodeJpgData = cls.decode(encodeJpgData, aescode, uniqueKey, False);
+        jpgFd = open(Config.shared.outPath + os.sep + "nocover-decode.jpg", "w");
+        jpgFd.write(decodeJpgData);
+        jpgFd.flush();
+        jpgFd.close();
+
+
+

@@ -65,11 +65,12 @@ def test():
     # kvDb = KeyValueDb();
     # kvDb.test();
 
-    # Aes.test();
+    from src.utils.Aes import Aes
+    Aes.test();
 
     # BookId.test();
 
-    dropAllTables();
+    # dropAllTables();
     # Log.test();
     # ak = "qiniu access key";
     # sk = "qiniu secret key";
