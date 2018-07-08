@@ -6,7 +6,6 @@ from src.model.Models import *
 from src.utils import Log
 
 class KeyValueDb(BaseDb):
-
     def tableName(self):
         return "keyvalue";
 

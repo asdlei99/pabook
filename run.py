@@ -50,7 +50,7 @@ from src.parser import BookId
 
 from src.utils import Log
 
-import sys
+import sys, os
 
 #from qiniu import Auth, put_file, etag, BucketManager
 # import boto3
@@ -124,13 +124,16 @@ sys.setdefaultencoding("utf-8");
 
 # Config.py
 def createConfigFile():
-    fd = open("Config.sample.py", "r");
-    content = fd.read();
-    fd.close();
-    wfd = open("Config.py", "w");
-    wfd.write(content);
-    wfd.flush();
-    wfd.close();
+    if not os.path.exists("Config.py"):
+        fd = open("Config.sample.py", "r");
+        content = fd.read();
+        fd.close();
+        wfd = open("Config.py", "w");
+        wfd.write(content);
+        wfd.flush();
+        wfd.close();
+    from Config import Config
+    Config.shared.check();
 
 if __name__ == '__main__':
     # test();

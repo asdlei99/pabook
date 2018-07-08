@@ -7,7 +7,7 @@ import os
 from src.utils import Log
 
 class Storge(object):
-    def __init__(self, outPath):
+    def __init__(self, outPath = None):
         Log.D("[I] Storge inited");
         self.outPath = outPath;
 

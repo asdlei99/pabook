@@ -11,44 +11,42 @@ import urlparse
 
 from src.model import *
 
-from src.db.BookinfoDb import BookinfoDb
-from src.db.ChapterDb import ChapterDb
-from src.db.VisitUrlDb import *
-from src.db.KeyValueDb import *
+from src.db import *
 
 from src.utils.Aes import Aes
 
 import BookId
 
-from src.Options import Options
+from Config import Config
 
 from src.utils import Log
+
+from src.storge import *
 
 class Parser:
 
     #构造函数
     def __init__(self):
-        cfg = Options.shared;
+        cfg = Config.shared;
 
-        self.rootUrl = cfg.rootUrl;
+        self.rootUrl = cfg.url;
 
         self.scheme = cfg.scheme;
         self.host = cfg.host;
 
         self.outPath = cfg.outPath;
         self.tmpPath = cfg.tmpPath;
-        self.charset = cfg.charset;
-        self.aescode = cfg.aescode;
+        self.aescode = cfg.aesCode;
 
         self.sectionDownloadSuccCount = 0;
         self.sectionDownloadFailedCount = 0;
 
-        self.bookDb = cfg.bookDb;
-        self.visitUrlDb = cfg.visitUrlDb;
-        self.visitBookUrlDb = cfg.visitBookUrlDb;
-        self.kvDb = cfg.kvDb;
+        self.bookDb = DbFactory.shared.get("BookinfoDb");
+        self.visitUrlDb = DbFactory.shared.get("VisitUrlDb");
+        self.visitBookUrlDb = DbFactory.shared.get("VisitBookUrlDb");
+        self.kvDb = DbFactory.shared.get("KeyValueDb");
 
-        self.storge = cfg.storge;
+        self.storge = StorgeFactory.shared.get(cfg.storgeName, cfg.outPath);
 
         Log.D("[I] Parser.inited");
 
@@ -172,6 +170,7 @@ class Parser:
 
                         #bookId
                         if existsBookId == None:
+                            BookId.init(self.kvDb);
                             bookInfo.bookId = BookId.nextBookId();
                         else:
                             bookInfo.bookId = existsBookId;

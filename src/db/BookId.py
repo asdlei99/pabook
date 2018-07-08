@@ -8,6 +8,8 @@ _lastBookId = None;
 _kvDb = None;
 
 def init(kvDb):
+    if _lastBookId != None:
+        return;
     global _kvDb;
     global _lastBookId;
     _kvDb = kvDb;
