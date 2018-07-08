@@ -122,8 +122,19 @@ def test():
 reload(sys);
 sys.setdefaultencoding("utf-8");
 
+# Config.py
+def createConfigFile():
+    fd = open("Config.sample.py", "r");
+    content = fd.read();
+    fd.close();
+    wfd = open("Config.py", "w");
+    wfd.write(content);
+    wfd.flush();
+    wfd.close();
+
 if __name__ == '__main__':
     # test();
+    createConfigFile();
     Prepare();
 else:
     print("error");
