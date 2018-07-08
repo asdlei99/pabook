@@ -50,7 +50,7 @@ from src.parser import BookId
 
 from src.utils import Log
 
-from qiniu import Auth, put_file, etag, BucketManager
+#from qiniu import Auth, put_file, etag, BucketManager
 # import boto3
 # from botocore.exceptions import ClientError
 
