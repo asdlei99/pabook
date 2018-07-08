@@ -3,9 +3,9 @@
 import pymysql
 import pymysql.cursors
 
-from src.utils import Utils
+from src.utils import Utils, Log
 
-from src.utils import Log
+from src.Config import Config
 
 class Db:
     #pymysql接口
@@ -13,9 +13,9 @@ class Db:
         Log.D("[I] init class Db");
         connConfig = {
             'host': '127.0.0.1',
-            'user': 'wanghy',
-            'password': 'wang@1234',
-            'db': 'book',
+            'user': Config.shared.dbUser,
+            'password': Config.shared.dbPwd,
+            'db': Config.shared.dbName,
             'charset': 'utf8',
             'cursorclass': pymysql.cursors.DictCursor,
             'autocommit': True

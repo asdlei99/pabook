@@ -14,7 +14,7 @@ class AWSStorge(Storge):
         self.bk = Config.shared.awsBK;
         self.filepath = "files";
         self.s3 = boto3.resource("s3");
-        self.bucket = s3.Bucket(self.bk);
+        self.bucket = self.s3.Bucket(self.bk);
 
     def checkFileExists(self, fileuniquekey, toDir, complete):
         outDir = self.filepath;
@@ -28,10 +28,11 @@ class AWSStorge(Storge):
         except Exception, e:
             Log.Exc(e);
 
-        if objSummary != None:
-            complete(True);
-        else:
-            complete(False);
+        if complete != None:
+            if objSummary != None:
+                complete(True);
+            else:
+                complete(False);
 
     def pushContent(self, content, fileuniquekey, toDir, complete):
         outDir = self.filepath;
@@ -44,7 +45,8 @@ class AWSStorge(Storge):
         except Exception, e:
             Log.Exc(e);
 
-        if pushRet != None:
-            complete(True);
-        else:
-            complete(False);
+        if complete != None:
+            if pushRet != None:
+                complete(True);
+            else:
+                complete(False);

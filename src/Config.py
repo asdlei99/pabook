@@ -4,11 +4,17 @@
 class Config:
     shared = None;
     def __init__(self):
+        #七牛
         self.qnAK = "qiniu access key";
         self.qnSK = "qiniu secret key";
         self.qnBK = "qiniu bucket name";
 
-        #aws bucket name
-        self.awsBK = "com-kaso";
+        #aws
+        self.awsBK = "aw-kaso";
+
+        #mysql
+        self.dbUser = "wanghy"
+        self.dbPwd = "wang@1234"
+        self.dbName = "book"
 
 Config.shared = Config();
