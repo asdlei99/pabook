@@ -15,7 +15,7 @@ from src.db import *
 
 from src.utils.Aes import Aes
 
-import BookId
+from src.db import BookId
 
 from Config import Config
 

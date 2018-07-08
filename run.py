@@ -34,20 +34,6 @@ pip install qiniu
 python run.py -r "http://www.ybdu.com" -o ./out -p YbduParser -s FileStorge -a "helloworld"
 '''
 
-from src.utils import Utils
-
-from src.db.BookinfoDb import BookinfoDb
-from src.db.ChapterDb import ChapterDb
-from src.db.VisitUrlDb import *
-from src.db.KeyValueDb import *
-from src.db import Db
-
-from src.utils.Aes import Aes
-
-from src.Prepare import Prepare
-
-from src.parser import BookId
-
 from src.utils import Log
 
 import sys, os
@@ -119,9 +105,6 @@ def test():
     # ret = bucket.put_object(Key="test3.txt", Body="hello world");
     # Log.D(" -- upload file ret="+str(ret));
 
-reload(sys);
-sys.setdefaultencoding("utf-8");
-
 # Config.py
 def createConfigFile():
     if not os.path.exists("Config.py"):
@@ -138,6 +121,7 @@ def createConfigFile():
 if __name__ == '__main__':
     # test();
     createConfigFile();
+    from src.Prepare import Prepare
     Prepare();
 else:
     print("error");

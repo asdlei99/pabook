@@ -15,18 +15,10 @@ import time
 
 import md5
 
+import sys
+
 reload(sys);
 sys.setdefaultencoding("utf-8");
-
-#打印log
-
-def log(msg):
-    print(msg);
-
-#打印Except
-
-def logE(e):
-    log("[E] %s \n %s" %(str(e), str(traceback.format_exc())));
 
 #读取文件内容
 
