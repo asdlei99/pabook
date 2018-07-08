@@ -16,6 +16,20 @@ sudo pip install lxml
 '''
 
 '''
+#若用aws需安装boto3
+1. 安装开发依赖：boto3 pip install boto3
+2. 创建文件 ~/.aws/credentials 内容为： 
+[default]
+aws_access_key_id = 你的aws key id
+aws_secret_access_key = 你的aws access key
+'''
+
+'''
+#若用七牛云，需安装七牛 
+pip install qiniu
+'''
+
+'''
 #运行
 python run.py -r "http://www.ybdu.com" -o ./out -p YbduParser -s FileStorge -a "helloworld"
 '''
@@ -35,6 +49,10 @@ from src.Prepare import Prepare
 from src.parser import BookId
 
 from src.utils import Log
+
+from qiniu import Auth, put_file, etag, BucketManager
+# import boto3
+# from botocore.exceptions import ClientError
 
 def dropAllTables():
     Db.instance.executeSql('''show tables;''');
@@ -65,6 +83,39 @@ def test():
 
     # dropAllTables();
     # Log.test();
+    ak = "kEmp3KqS4q-vdXq4ZXfVxeEm7KtpTQJ4EQ3-s0vl";
+    sk = "x9HqUozCeuvCnB0euXLtmNP_oNqlzDqShUh7SsbB";
+    bk = "com-aw";
+    qn = Auth(ak, sk);
+    key = "logs/test-log1.txt";
+    token = qn.upload_token(bk, key, 3600);
+    ret, info = put_file(token, key, "./out/logs/error/log-error-20180706000000.txt")
+    Log.D(str(ret));
+    Log.D(str(info));
+
+    bkManager = BucketManager(qn);
+    ret, resp = bkManager.stat(bk, key);
+    Log.D(str(ret) + " ~~~~ " + str(resp));
+    ret1, resp1 = bkManager.stat(bk, "asdasdas");
+    Log.D(str(ret1) + " ~~~~ " + str(resp1));
+
+    # s3 = boto3.resource("s3");
+    # bucket = s3.Bucket("aw-kaso");
+    # obj = None;
+    # try:
+    #     obj = s3.ObjectSummary("aw-kaso", "testxxx.txt").get();
+    # except Exception, e:
+    #     Log.Exc(e);
+    #     Log.D("错误了");
+
+
+    # Log.D(" -- objSummary = " + str(obj))
+    # Log.D(" -- bucketname= " + str(bucket.name) + ", allobject = " + str(bucket.objects));
+    # for obj in bucket.objects.all():
+    #     Log.D(" -- obj.key = " + obj.key);
+    # # data = open("./out/logs/error/log-error-20180706000000.txt", "rb");
+    # ret = bucket.put_object(Key="test3.txt", Body="hello world");
+    # Log.D(" -- upload file ret="+str(ret));
 
 if __name__ == '__main__':
     # test();

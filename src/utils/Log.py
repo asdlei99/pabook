@@ -124,16 +124,16 @@ shared = Log();
 def setOutPath(outPath):
     shared.setOutPath(outPath);
 
-def I(msg, toConsole = True, toFile = True):
+def I(msg, toConsole = False, toFile = True):
     shared.I(msg, toConsole, toFile);
 
-def E(msg, toConsole = False, toFile = True):
+def E(msg, toConsole = True, toFile = True):
     shared.E(msg, toConsole, toFile);
 
-def Exc(e, toConsole = False, toFile = True):
+def Exc(e, toConsole = True, toFile = True):
     shared.Exc(e, toConsole, toFile);
 
-def D(msg, toConsole = False, toFile = True):
+def D(msg, toConsole = True, toFile = True):
     shared.D(msg, toConsole, toFile);
 
 def W(msg, toConsole = False, toFile = True):

@@ -36,7 +36,8 @@ class BookinfoDb(BaseDb):
                 recommendCount int default 0,
                 monthRecommendCount int default 0,
                 weekRecommendCount int default 0,
-                downloadStatus int default -1
+                downloadStatus int default -1,
+                shouldShow tinyint default 1
             );
             '''.format(self.tableName());
 

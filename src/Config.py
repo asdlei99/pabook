@@ -1,56 +1,13 @@
 #coding=utf-8
 
-import urlparse
-
-from src.parser import BookId
-
-from src.db.BookinfoDb import BookinfoDb
-from src.db.ChapterDb import ChapterDb
-from src.db.VisitUrlDb import *
-from src.db.KeyValueDb import *
-
-from src.utils import Utils
-
-import os
-
+#七牛和aws key
 class Config:
     shared = None;
-    #参数检查
-    def checkInput(self):
-        if not Utils.isValidUrl(self.rootUrl):
-            raise Exception("rootUrl is not valid");
-        elif not Utils.isValidStr(self.outPath):
-            raise Exception("outPath is not valid");
-        elif not Utils.isValidStr(self.charset):
-            raise Exception("charset is not valid");
+    def __init__(self):
+        self.qnAK = "kEmp3KqS4q-vdXq4ZXfVxeEm7KtpTQJ4EQ3-s0vl";
+        self.qnSK = "x9HqUozCeuvCnB0euXLtmNP_oNqlzDqShUh7SsbB";
+        self.qnBK = "com-aw";
 
-    def __init__(self, url, output, charset, parser, type, storge, aescode = None):
-        self.rootUrl = url;
+        self.awsBK = "com-kaso";
 
-        urlParseResult = urlparse.urlsplit(url);
-        self.scheme = urlParseResult.scheme;
-        self.host = urlParseResult.netloc;
-
-        self.outPath = output;
-        self.tmpPath = output + os.sep + ".tmp";
-        if not Utils.createDir(self.tmpPath):
-            raise Exception("--创建tmpdir失败");
-        self.charset = charset;
-
-        self.parser = parser;
-        self.parseType = type;
-
-        self.storge = storge;
-
-        self.aescode = aescode;
-        self.checkInput();
-
-        self.bookDb = BookinfoDb();
-        self.visitUrlDb = VisitUrlDb();
-        self.visitBookUrlDb = VisitBookUrlDb();
-        self.kvDb = KeyValueDb();
-
-        BookId.init(self.kvDb);
-
-        from src.utils import Log
-        Log.setOutPath(output);
+Config.shared = Config();

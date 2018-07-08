@@ -1,3 +1,5 @@
 #coding=utf-8
 
-__all__ = ["Storge"];
+from FileStorge import FileStorge
+from QiniuStorge import QiniuStorge
+from AWSStorge import AWSStorge

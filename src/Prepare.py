@@ -4,7 +4,7 @@ from optparse import OptionParser
 
 from src.parser.YbduParser import YbduParser
 
-from src.storge.FileStorge import FileStorge
+from src.storge import *
 
 import os
 
@@ -14,7 +14,7 @@ from src.storge.Storge import *
 
 from src.utils import Utils
 
-from src.Config import Config
+from src.Options import Options
 
 from src.utils import Log
 
@@ -67,23 +67,23 @@ class Prepare:
     def __init__(self):
         self.onPrepare();
 
-    def createConfig(self):
-        Config.shared = Config(**self.__parseOptions());
+    def createOptions(self):
+        Options.shared = Options(**self.__parseOptions());
 
     def createParser(self):
         #创建parser
-        parser = eval(Config.shared.parser + "()");
+        parser = eval(Options.shared.parser + "()");
 
         if not parser: 
             raise "parser cant init";
 
-        if Config.shared.parseType == "all":
+        if Options.shared.parseType == "all":
             parser.execute();
         else:
-            parser.downloadBook(Config.shared.rootUrl);
+            parser.downloadBook(Options.shared.rootUrl);
 
     def onPrepare(self):
-        self.createConfig();
+        self.createOptions();
         # self.test();
         self.createParser()
 

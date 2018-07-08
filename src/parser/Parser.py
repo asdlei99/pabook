@@ -20,7 +20,7 @@ from src.utils.Aes import Aes
 
 import BookId
 
-from src.Config import Config
+from src.Options import Options
 
 from src.utils import Log
 
@@ -28,7 +28,7 @@ class Parser:
 
     #构造函数
     def __init__(self):
-        cfg = Config.shared;
+        cfg = Options.shared;
 
         self.rootUrl = cfg.rootUrl;
 
@@ -214,11 +214,11 @@ class Parser:
     def downloadBookImg(self, url, toDir):
         Log.I("[I] dowlonad bookImg " + url);
         uniqueKey = Utils.md5str(url);
-        self.storge.checkFileExists(uniqueKey, toDir, lambda exists, fileurl: not exists and self._downloadBookImg(url, uniqueKey, toDir))
+        self.storge.checkFileExists(uniqueKey, toDir, lambda exists: not exists and self._downloadBookImg(url, uniqueKey, toDir))
 
     #下载章节
-    def onDownloadSectionCompleted(self, idx, uniqueKey, succ, fileurl):
-        Log.I("[I] download section(%s) completed succ(%s) file(%s)" % (str(idx), str(succ), str(fileurl)));
+    def onDownloadSectionCompleted(self, idx, uniqueKey, succ):
+        Log.I("[I] download section(%s) completed succ(%s)" % (str(idx), str(succ)));
         if succ:
             self.sectionDownloadSuccCount += 1;
             self.chapterDb.setDownloaded(uniqueKey, 1);
@@ -229,21 +229,21 @@ class Parser:
     def _downloadOneSection(self, idx, url, uniqueKey, toDir):
         contentSoup = Utils.soupUrl(url);
         if contentSoup == None:
-            self.onDownloadSectionCompleted(idx, uniqueKey, False, None);
+            self.onDownloadSectionCompleted(idx, uniqueKey, False);
             return;
 
         content = self.chapterContent(contentSoup);
         if content == None:
-            self.onDownloadSectionCompleted(idx, uniqueKey, False, None);
+            self.onDownloadSectionCompleted(idx, uniqueKey, False);
             return;
 
-        self.pushContent(content, uniqueKey, toDir, lambda succ, fileurl: self.onDownloadSectionCompleted(idx, uniqueKey, succ, fileurl));
+        self.pushContent(content, uniqueKey, toDir, lambda succ: self.onDownloadSectionCompleted(idx, uniqueKey, succ));
 
     def downloadOneSection(self, idx, oneSectionModel, toDir):
         Log.I("[I] downloading section(%s) (%s) (%s)" % (str(idx), str(oneSectionModel.title), str(oneSectionModel.downUrl)));
         uniqueKey = oneSectionModel.uniqueKey;
         url = oneSectionModel.downUrl;
-        self.storge.checkFileExists(oneSectionModel.uniqueKey, toDir, lambda exists, fileurl: not exists and (self._downloadOneSection(idx, url, uniqueKey, toDir) or True) or self.onDownloadSectionCompleted(idx, uniqueKey, True, fileurl));
+        self.storge.checkFileExists(oneSectionModel.uniqueKey, toDir, lambda exists: not exists and (self._downloadOneSection(idx, url, uniqueKey, toDir) or True) or self.onDownloadSectionCompleted(idx, uniqueKey, True));
 
     def downloadSection(self, sectionInfo):
         sectionCount = len(sectionInfo.chapters);
