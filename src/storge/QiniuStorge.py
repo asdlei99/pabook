@@ -1,7 +1,7 @@
 #coding=utf-8
 
 from Storge import Storge
-from src.Config import Config
+from Config import Config
 from src.Options import Options
 from src.utils import Utils, Log
 

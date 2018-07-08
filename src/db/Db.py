@@ -5,7 +5,7 @@ import pymysql.cursors
 
 from src.utils import Utils, Log
 
-from src.Config import Config
+from Config import Config
 
 class Db:
     #pymysql接口

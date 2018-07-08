@@ -14,7 +14,7 @@ class Config:
 
         #mysql
         self.dbUser = "wanghy"
-        self.dbPwd = "Wang@1234"
+        self.dbPwd = "wang@1234"
         self.dbName = "book"
 
 Config.shared = Config();
