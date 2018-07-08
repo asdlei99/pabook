@@ -115,3 +115,4 @@ class Config:
             self.error("未配置mysql的用户名，密码或数据库名称");
 
 Config.shared = Config();
+Config.shared.check();

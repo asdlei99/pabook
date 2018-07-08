@@ -115,8 +115,6 @@ def createConfigFile():
         wfd.write(content);
         wfd.flush();
         wfd.close();
-    from Config import Config
-    Config.shared.check();
 
 if __name__ == '__main__':
     # test();
