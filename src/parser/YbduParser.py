@@ -80,6 +80,8 @@ class YbduParser(Parser):
                 c = tag["content"];
                 if value == "updateTime":
                     c = Utils.getTimestamp(c, "%Y-%m-%d %H:%M");
+                elif value == "category":
+                    c = self.bookCategory(c);
                 setattr(model, value, c);
                 setted = True;
                 break;
@@ -131,7 +133,7 @@ class YbduParser(Parser):
         return model;
 
     def bookCategory(self, categoryStr):
-        return super.bookCategory(categoryStr);
+        return super(YbduParser, self).bookCategory(categoryStr);
 
     def chapterContent(self, chapterSoup):
         tag = chapterSoup.find(id = "htmlContent");

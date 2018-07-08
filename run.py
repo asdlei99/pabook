@@ -43,6 +43,7 @@ import sys, os
 # from botocore.exceptions import ClientError
 
 def dropAllTables():
+    from src.db import Db
     Db.instance.executeSql('''show tables;''');
     ret = Db.instance.fetchAll();
     for item in ret:
@@ -65,12 +66,12 @@ def test():
     # kvDb = KeyValueDb();
     # kvDb.test();
 
-    from src.utils.Aes import Aes
-    Aes.test();
+    # from src.utils.Aes import Aes
+    # Aes.test();
 
     # BookId.test();
 
-    # dropAllTables();
+    dropAllTables();
     # Log.test();
     # ak = "qiniu access key";
     # sk = "qiniu secret key";
@@ -118,8 +119,8 @@ def createConfigFile():
         wfd.close();
 
 if __name__ == '__main__':
-    # test();
     createConfigFile();
+    # test();
     from src.Prepare import Prepare
     Prepare();
 else:

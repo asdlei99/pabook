@@ -12,6 +12,10 @@ class BookinfoDb(BaseDb):
         return "bookinfo";
 
     #操作bookinfo表
+    #category: 分类见BookCategories.py
+    #status: 书籍状态见Models.BookInfoStatus
+    #downloadStatus: 下载状态见Models.BookDownloadStatus
+    #shouldShow: 是否展示 1展示 0隐藏
     def createTableSql(self):
         return '''
             create table if not exists {}(

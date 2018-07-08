@@ -5,7 +5,7 @@ import os, sys
 
 import re
 
-import BookCategories
+from BookCategories import BookCategories
 
 import urlparse
 
@@ -23,7 +23,7 @@ from src.utils import Log
 
 from src.storge import *
 
-class Parser:
+class Parser(object):
 
     #构造函数
     def __init__(self):
@@ -305,8 +305,6 @@ class Parser:
         self.chapterDb = ChapterDb(bookId);
         return self.chapterDb.getSectionInfoModel();
 
-
-
     #设置某本书的下载状态
     def setDownloadedForBookUrl(self, bookUrl):
         self.bookDb.setDownloadStautsForBookUrl(BookDownloadStatus.Completed, bookUrl)
@@ -376,7 +374,7 @@ class Parser:
         raise Exception("子类实现");
 
     def bookCategory(self, categoryStr):
-        raise Exception("子类实现");
+        return str(BookCategories.categoryInt(categoryStr));
 
     def chapterContent(self, chapterSoup):
         raise Exception("子类实现");
