@@ -4,10 +4,11 @@
 class Config:
     shared = None;
     def __init__(self):
-        self.qnAK = "kEmp3KqS4q-vdXq4ZXfVxeEm7KtpTQJ4EQ3-s0vl";
-        self.qnSK = "x9HqUozCeuvCnB0euXLtmNP_oNqlzDqShUh7SsbB";
-        self.qnBK = "com-aw";
+        self.qnAK = "qiniu access key";
+        self.qnSK = "qiniu secret key";
+        self.qnBK = "qiniu bucket name";
 
+        #aws bucket name
         self.awsBK = "com-kaso";
 
 Config.shared = Config();

@@ -83,9 +83,9 @@ def test():
 
     # dropAllTables();
     # Log.test();
-    ak = "kEmp3KqS4q-vdXq4ZXfVxeEm7KtpTQJ4EQ3-s0vl";
-    sk = "x9HqUozCeuvCnB0euXLtmNP_oNqlzDqShUh7SsbB";
-    bk = "com-aw";
+    ak = "qiniu access key";
+    sk = "qiniu secret key";
+    bk = "qiniu bucket name";
     qn = Auth(ak, sk);
     key = "logs/test-log1.txt";
     token = qn.upload_token(bk, key, 3600);
