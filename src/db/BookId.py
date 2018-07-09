@@ -8,10 +8,10 @@ _lastBookId = None;
 _kvDb = None;
 
 def init(kvDb):
-    if _lastBookId != None:
-        return;
     global _kvDb;
     global _lastBookId;
+    if _lastBookId != None:
+        return;
     _kvDb = kvDb;
     id = kvDb.get("lastBookId");
     if id != None:

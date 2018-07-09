@@ -55,7 +55,7 @@ def logFileSuffix(logInterval):
     s = currTimestamp();
     return timeFormat(s - s % logInterval) + ".txt";
 
-class Log:
+class _Log:
     def __init__(self, outpath = None, logInterval = 3600):
         self.logInterval = logInterval;
         self.setOutPath(outpath);
@@ -91,53 +91,40 @@ class Log:
             logRedirect.toFile(filePath);
         logRedirect.clean();
 
-    def I(self, msg, toConsole = False, toFile = True):
+    def _logEnabled(self, tag):
+        from Config import Config
+        if Config.shared.logLevel == None:
+            return True;
+        return tag in Config.shared.logLevel;
+
+    def I(self, msg):
         filePath = None;
-        if toFile and self.infoDir != None:
+        if self.infoDir != None:
             filePath = self.infoDir + os.sep + "log-info-" + logFileSuffix(self.logInterval)
-        self._log(msg, "[I]", toConsole, toFile, filePath);
+        self._log(msg, "[I]", self._logEnabled("I"), True, filePath);
 
-    def Exc(self, e, toConsole = False, toFile = True):
-        msg = str(traceback.format_exc());
-        self.E(msg, toConsole, toFile);
+    def Exc(self, e):
+        self.E(str(traceback.format_exc()));
 
-    def E(self, msg, toConsole = False, toFile = True):
+    def E(self, msg):
         filePath = None;
-        if toFile and self.errorDir != None:
+        if self.errorDir != None:
             filePath = self.errorDir + os.sep + "log-error-" + logFileSuffix(self.logInterval)
-        self._log(msg, "[E]", toConsole, toFile, filePath);
+        self._log(msg, "[E]", self._logEnabled("E"), True, filePath);
 
-    def D(self, msg, toConsole = False, toFile = True):
+    def D(self, msg):
         filePath = None;
-        if toFile and self.debugDir != None:
+        if self.debugDir != None:
             filePath = self.debugDir + os.sep + "log-debug-" + logFileSuffix(self.logInterval)
-        self._log(msg, "[D]", toConsole, toFile, filePath);
+        self._log(msg, "[D]", self._logEnabled("D"), True, filePath);
 
-    def W(self, msg, toConsole = False, toFile = True):
+    def W(self, msg):
         filePath = None;
-        if toFile and self.warnDir != None:
+        if self.warnDir != None:
             filePath = self.warnDir + os.sep + "log-warn-" + logFileSuffix(self.logInterval)
-        self._log(msg, "[D]", toConsole, toFile, filePath);
+        self._log(msg, "[D]", self._logEnabled("W"), True, filePath);
 
-shared = Log();
-
-def setOutPath(outPath):
-    shared.setOutPath(outPath);
-
-def I(msg, toConsole = False, toFile = True):
-    shared.I(msg, toConsole, toFile);
-
-def E(msg, toConsole = True, toFile = True):
-    shared.E(msg, toConsole, toFile);
-
-def Exc(e, toConsole = True, toFile = True):
-    shared.Exc(e, toConsole, toFile);
-
-def D(msg, toConsole = True, toFile = True):
-    shared.D(msg, toConsole, toFile);
-
-def W(msg, toConsole = False, toFile = True):
-    shared.W(msg, toConsole, toFile);
+Log = _Log();
 
 #检查删除log文件
 def checkLogEntired(dir, saveDuration = 3600 * 24 * 3):
@@ -150,19 +137,19 @@ def checkLogEntired(dir, saveDuration = 3600 * 24 * 3):
             timestamp = os.path.getmtime(file);
             if currTimestamp() - timestamp > saveDuration:
                 os.path.remove(file);
-                I("删除文件 " + file + " 修改时间：" + timeFormat(timestamp), toConsole = True, toFile = False);
+                Log.I("删除文件 " + file + " 修改时间：" + timeFormat(timestamp), toConsole = True, toFile = False);
                 count += 1;
             else:
-                I("保留文件 " + file + " 修改时间：" + timeFormat(timestamp), toConsole = True, toFile = False);
-    I("完成：发现log文件 " + str(totalCount) + "个，过期删除文件 "+ str(count) + "个");
+                Log.I("保留文件 " + file + " 修改时间：" + timeFormat(timestamp), toConsole = True, toFile = False);
+    Log.I("完成：发现log文件 " + str(totalCount) + "个，过期删除文件 "+ str(count) + "个");
 
 def test():
-    I("hello world", True, True);
-    E("hello world", True, True);
-    D("hello world", True, True);
-    W("hello world", True, True);
+    Log.I("hello world", True, True);
+    Log.E("hello world", True, True);
+    Log.D("hello world", True, True);
+    Log.W("hello world", True, True);
     try:
         raise Exception("this is test Exception")
     except Exception, e:
-        Exc(e, True, True);
-    I("finally code", True, True);
+        Log.Exc(e, True, True);
+    Log.I("finally code", True, True);
