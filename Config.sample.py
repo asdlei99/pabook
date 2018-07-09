@@ -58,7 +58,7 @@ class Config:
         self.dbPwd = "wang@1234";
         self.dbName = "book";
 
-        self.logLevel = "EIWD";
+        self.logLevel = "";
 
     def error(self, msg):
         raise Exception(msg);

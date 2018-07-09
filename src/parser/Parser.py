@@ -48,11 +48,11 @@ class Parser(object):
 
         self.storge = StorgeFactory.shared.get(cfg.storgeName, cfg.outPath);
 
-        Log.D("[I] Parser.inited");
+        Log.V("[I] Parser.inited");
 
     #析构函数
     def __del__(self):
-        Log.D("[I] Parser dealloc");
+        Log.V("[I] Parser dealloc");
 
     #测试
     def test(self):
@@ -64,7 +64,7 @@ class Parser(object):
     def execute(self):
         # self.test();
         #如果在数据库中能找到visitUrl，说明程序已经运行过了，可以从数据库中恢复现场
-        Log.I("[I] onExecute()");
+        Log.V("[I] onExecute()");
 
         #检查是否有visiting的book
         visitingBookUrl = self.visitingBookUrl();
@@ -97,7 +97,7 @@ class Parser(object):
                 self.downloadBook(bookUrl);
             else:
                 break;
-        Log.I("------parse finished------");
+        Log.V("------parse finished------");
 
     #开始搜索某个url
     #将url页内包含的所有url都记录下来
@@ -129,7 +129,7 @@ class Parser(object):
 
     #下载book信息
     def downloadBook(self, url):
-        Log.I("[I] on downloadBook() " + str(url));
+        Log.V("[I] on begin downloadBook() " + str(url));
 
         #检查是否下载过了
         if self.checkDownloadedBookUrl(url):
@@ -196,6 +196,8 @@ class Parser(object):
 
         #移除visiting book url
         self.removeBookUrl(url);
+
+        Log.V("on finished downloadBook() " + str(url))
 
     #下载封面
     def pushContent(self, content, fileuniquekey, toDir, needEncode, complete):

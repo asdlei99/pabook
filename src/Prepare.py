@@ -22,7 +22,7 @@ class Prepare:
         parser = ParserFactory.shared.get(parserName);
 
         if not parser: 
-            raise "parser cant init";
+            raise Exception("parser cant init");
 
         if Config.shared.parseType == "all":
             parser.execute();

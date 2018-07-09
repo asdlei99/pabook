@@ -71,11 +71,14 @@ class _Log:
             Utils.createDir(self.debugDir);
             self.warnDir = self.outPath + os.sep + "logs" + os.sep + "warn";
             Utils.createDir(self.warnDir);
+            self.verboseDir = self.outPath + os.sep + "logs" + os.sep + "verbose"
+            Utils.createDir(self.verboseDir);
         else:
             self.infoDir = None;
             self.errorDir = None;
             self.debugDir = None;
             self.warnDir = None;
+            self.verboseDir = None;
 
     def errorLogFileName(self):
         return currErrorFileName(self.logInterval);
@@ -94,7 +97,7 @@ class _Log:
     def _logEnabled(self, tag):
         from Config import Config
         if Config.shared.logLevel == None:
-            return True;
+            return False;
         return tag in Config.shared.logLevel;
 
     def I(self, msg):
@@ -123,6 +126,12 @@ class _Log:
         if self.warnDir != None:
             filePath = self.warnDir + os.sep + "log-warn-" + logFileSuffix(self.logInterval)
         self._log(msg, "[D]", self._logEnabled("W"), True, filePath);
+
+    def V(self, msg):
+        filePath = None;
+        if self.verboseDir != None:
+            filePath = self.verboseDir + os.sep + "log-verbose-" + logFileSuffix(self.logInterval)
+        self._log(msg, "[V]", True, True, filePath);
 
 Log = _Log();
 
