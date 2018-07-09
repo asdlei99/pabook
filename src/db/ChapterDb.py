@@ -2,7 +2,7 @@
 
 from BaseDb import BaseDb
 
-from src.model.Models import *
+from src.model import *
 
 class ChapterDb(BaseDb):
     def __init__(self, bookId):
