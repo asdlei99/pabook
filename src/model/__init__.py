@@ -1,3 +1,8 @@
 #coding=utf-8
 
-__all__ = ["Models"]
+import Common
+
+from BookInfoModel import BookInfoModel
+from ChapterModel import ChapterModel
+from SectionInfoModel import SectionInfoModel
+from VisitUrlModel import VisitUrlModel

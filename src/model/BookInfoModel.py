@@ -1,18 +1,7 @@
 #coding=utf-8
 
 from src.utils import Utils
-
-class Enum(tuple):
-    __getattr__ = tuple.index;
-
-#Ongoing表示正在连载
-#Completed表示已完本
-#Error表示书籍错误
-BookInfoStatus = Enum(["Ongoing", "Completed", "Error"])
-
-BookDownloadStatus = Enum(["Ongoing", "Completed"]);
-
-BookVistUrlStatus = Enum(["Ready", "Visited"])
+import Common
 
 class BookInfoModel:
     def __init__(self):
@@ -65,34 +54,3 @@ class BookInfoModel:
 
     def __str__(self):
         return str(self.toDict(False));
-
-class ChapterModel:
-    def __init__(self, url = None, title = None, uniqueKey = None):
-        self.downUrl = url;
-        self.title = title;
-        self.uniqueKey = uniqueKey;
-        self.downloaded = -1;
-
-    def applyDict(self, d):
-        attrnames = dir(self);
-        for key, value in d.items():
-            if key in attrnames:
-                setattr(self, key, value);
-
-class SectionInfoModel:
-    def __init__(self):
-        self.chapters = [];
-        self.bookInfo = None;
-
-    def addChapter(self, url, title):
-        key = Utils.md5str(self.bookInfo.uniqueKey + str(len(self.chapters)) + title + url);
-        self.chapters.append(ChapterModel(url, title, key));
-
-    def getChapter(self, index):
-        return self.chapters[index];
-
-class VisitUrlModel:
-    def __init__(self, url = None, visiting = None, bookId = None):
-        self.url = url;
-        self.visiting = visiting;
-        self.bookId = bookId;

@@ -2,7 +2,7 @@
 
 from BaseDb import BaseDb
 
-from src.model.Models import *
+from src.model import *
 from src.utils import Log
 
 class KeyValueDb(BaseDb):
