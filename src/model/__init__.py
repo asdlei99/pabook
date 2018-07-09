@@ -1,6 +1,6 @@
 #coding=utf-8
 
-import Common
+from Common import *
 
 from BookInfoModel import BookInfoModel
 from ChapterModel import ChapterModel

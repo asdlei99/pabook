@@ -1,7 +1,8 @@
 #coding=utf-8
 
 from src.utils import Utils
-import Common
+
+from Common import *
 
 class BookInfoModel:
     def __init__(self):

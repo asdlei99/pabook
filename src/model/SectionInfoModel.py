@@ -2,6 +2,8 @@
 
 from src.utils import Utils
 
+from ChapterModel import ChapterModel
+
 class SectionInfoModel:
     def __init__(self):
         self.chapters = [];
