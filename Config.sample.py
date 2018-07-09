@@ -26,7 +26,7 @@ class Config:
         #FileStorge表示存本地
         #QiniuStorge表示存七牛云
         #AWSStorge表示存AWS
-        self.storgeName = "FileStorge";
+        self.storgeName = "AWSStorge";
         #charset
         self.charset = "utf-8";
         #aes code
@@ -55,7 +55,7 @@ class Config:
         '''
         #mysql
         self.dbUser = "wanghy";
-        self.dbPwd = "wang@1234";
+        self.dbPwd = "Wang@1234";
         self.dbName = "book";
 
         self.logLevel = "";
