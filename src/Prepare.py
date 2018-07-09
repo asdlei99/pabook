@@ -10,6 +10,8 @@ from src.utils import Utils, Log
 
 from Config import Config
 
+from src.parser import ParserFactory
+
 class Prepare:
     def __init__(self):
         self.onPrepare();
@@ -17,8 +19,9 @@ class Prepare:
     def createParser(self):
         #创建parser
         parserName = Config.shared.parserName;
-        exec("from src.parser." + parserName + " import " + parserName);
-        parser = eval(parserName + "()");
+        # exec("from src.parser." + parserName + " import " + parserName);
+        # parser = eval(parserName + "()");
+        parser = ParserFactory.shared.get(parserName);
 
         if not parser: 
             raise "parser cant init";
