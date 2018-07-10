@@ -2,7 +2,7 @@
 
 import time
 
-from src.utils import Utils
+from src.utils import *
 
 import traceback
 

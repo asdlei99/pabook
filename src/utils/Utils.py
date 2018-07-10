@@ -17,8 +17,18 @@ import md5
 
 import sys
 
+from src.utils import *
+
 reload(sys);
 sys.setdefaultencoding("utf-8");
+
+def errLog(msg):
+    from Log import Log
+    Log.E(msg);
+
+def logE(exc):
+    from Log import Log
+    Log.Exc(exc);
 
 #读取文件内容
 
@@ -81,7 +91,7 @@ def readUrl(url, retryLimit = 10):
                 resp.close();
         times += 1;
         if times > 1:
-            log("[E] readUrl retry times(%s) to download url(%s)" % (str(times), str(url)));
+            errLog("[E] readUrl retry times(%s) to download url(%s)" % (str(times), str(url)));
     return res;
 
 
