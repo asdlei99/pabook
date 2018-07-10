@@ -52,7 +52,12 @@ def createConfigFile():
 if __name__ == '__main__':
     createConfigFile();
     # test();
-    from src.Prepare import Prepare
-    Prepare();
+    try:
+        from src.Prepare import Prepare
+        Prepare();
+    except Exception, e:
+        Log.E("--------异常退出--------");
+        Log.Exc(e);
+        sys.exit(0);
 else:
-    print("error");
+    Log.E("-错误")
