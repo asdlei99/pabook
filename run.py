@@ -31,11 +31,11 @@ def dropAllTables():
     for item in ret:
         for k, v in item.items():
             Db.instance.executeSql('''drop table if exists {};'''.format(v));
-            Log.I("droping table " + str(v));
-    Log.I("droped all tables finished");
+            Log.D("droping table " + str(v));
+    Log.D("droped all tables finished");
 
 def test():
-    Log.I("--test--");
+    Log.D("--test--");
     dropAllTables();
 
 # 将Config.sample.py复制出一个Config.py文件
@@ -58,6 +58,7 @@ if __name__ == '__main__':
     except Exception, e:
         Log.E("--------异常退出--------");
         Log.Exc(e);
+        Log.V(Log.traceback());
         sys.exit(0);
 else:
     Log.E("-错误")

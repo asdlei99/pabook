@@ -131,6 +131,9 @@ class Parser(object):
     def downloadBook(self, url):
         Log.V("[I] on begin downloadBook() " + str(url));
 
+        if url == None:
+            return;
+
         #检查是否下载过了
         if self.checkDownloadedBookUrl(url):
             return;
@@ -144,7 +147,9 @@ class Parser(object):
         existsBookId = None;
         if bookInfo != None:
             existsBookId = bookInfo.bookId;
+            Log.D(" downloadBook existsBookId = " + str(existsBookId));
             sectionInfo = self.getChapter(bookInfo.bookId);
+            Log.D(" downloadBook sectionInfo = " + str(sectionInfo));
             if sectionInfo == None or sectionInfo.chapters == None or len(sectionInfo.chapters) == 0:
                 sectionInfo = None;
                 bookInfo = None;
@@ -158,37 +163,44 @@ class Parser(object):
             if bookSoup != None:
                 Log.I("[I] on downloadBook() will get muluSoup");
                 muluUrl = self.bookMuluUrl(bookSoup);
-                muluSoup = Utils.soupUrl(muluUrl);
-                Log.I("[I] on downloadBook() did get muluSoup %s" % (str(muluSoup != None)));
-                if muluSoup != None:
-                    bookInfo = self.bookInfo(bookSoup, muluSoup);
-                    Log.I("[I] on downloadBook get bookInfo " + str(bookInfo));
-                    if bookInfo != None:
-                        bookInfo.setUniqueKey();
-                        bookInfo.downBookUrl = url;
-                        bookInfo.downMuluUrl = muluUrl;
+                if muluUrl != None:
+                    muluSoup = Utils.soupUrl(muluUrl);
+                    Log.I("[I] on downloadBook() did get muluSoup %s" % (str(muluSoup != None)));
+                    if muluSoup != None:
+                        bookInfo = self.bookInfo(bookSoup, muluSoup);
+                        Log.I("[I] on downloadBook get bookInfo " + str(bookInfo));
+                        if bookInfo != None:
+                            bookInfo.setUniqueKey();
+                            bookInfo.downBookUrl = url;
+                            bookInfo.downMuluUrl = muluUrl;
 
-                        #bookId
-                        if existsBookId == None:
-                            BookId.init(self.kvDb);
-                            bookInfo.bookId = BookId.nextBookId();
-                        else:
-                            bookInfo.bookId = existsBookId;
+                            #bookId
+                            if existsBookId == None:
+                                Log.D(" downloadBook will create new bookId");
+                                BookId.init(self.kvDb);
+                                bookInfo.bookId = BookId.nextBookId();
+                            else:
+                                Log.D(" downloadBook use exists bookId");
+                                bookInfo.bookId = existsBookId;
 
-                        #获取章节信息
-                        sectionInfo = self.sectionInfo(bookInfo, muluUrl, muluSoup);
-                        if sectionInfo != None:
-                            #最新章节
-                            bookInfo.chapterCount = len(sectionInfo.chapters);
-                        else:
-                            bookInfo.status = BookInfoStatus.Error;
-                            bookInfo.downloadStatus = BookDownloadStatus.Completed;
-                        #保存bookInfo
-                        self.saveBookinfo(bookInfo);
-                        self.saveChapter(bookInfo.bookId, sectionInfo);
+                            #获取章节信息
+                            sectionInfo = self.sectionInfo(bookInfo, muluUrl, muluSoup);
+                            if sectionInfo != None:
+                                Log.D(" downloadBook parse sectionInfo success");
+                                #最新章节
+                                bookInfo.chapterCount = len(sectionInfo.chapters);
+                            else:
+                                Log.D(" downloadBook error cant parser sectionInfo");
+                                bookInfo.status = BookInfoStatus.Error;
+                                bookInfo.downloadStatus = BookDownloadStatus.Completed;
+                            Log.D(" downloadBook save BookInfo " + str(bookInfo) + ", bookId = " + str(bookInfo.bookId) + ", save chapters " + str(sectionInfo))
+                            #保存bookInfo
+                            self.saveBookinfo(bookInfo);
+                            self.saveChapter(bookInfo.bookId, sectionInfo);
 
         #下载bookImg
-        self.downloadBookImg(bookInfo.bookImg, bookInfo.uniqueKey);
+        if bookInfo != None and bookInfo.bookImg != None:
+            self.downloadBookImg(bookInfo.bookImg, bookInfo.uniqueKey);
         if sectionInfo != None:
             self.downloadSection(sectionInfo);
             self.setDownloadedForBookUrl(url)
@@ -300,6 +312,9 @@ class Parser(object):
 
     #保存章节
     def saveChapter(self, bookId, sectionInfo):
+        if sectionInfo == None:
+            Log.E(" --- sectionInfo is None when saveChapter");
+            return;
         self.chapterDb = ChapterDb(bookId);
         return self.chapterDb.setSectionInfoModel(sectionInfo);
 

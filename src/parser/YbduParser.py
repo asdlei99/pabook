@@ -124,8 +124,11 @@ class YbduParser(Parser):
             if atag != -1:
                 href = Utils.absoluteUrl(atag["href"], muluUrl, None) ;
                 title = atag.string;
-                model.addChapter(href, title);
-                setted = True;
+                if href != None and title != None:
+                    model.addChapter(str(href), str(title));
+                    setted = True;
+                else:
+                    Log.W(" on getSection found invalid tag " + str(atag) + ", href=" + str(href) + ",title=" + str(title));
 
         if not setted:
             return None;

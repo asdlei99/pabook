@@ -40,11 +40,24 @@ class BookInfoModel:
             if key in attrnames:
                 setattr(self, key, value);
 
+    def _check(self, attrname, l):
+        value = getattr(self, attrname);
+        if value != None and len(value) > l:
+            setattr(self, attrname, value[:l]);
+
+    def check(self):
+        self._check("title", 32);
+        self._check("author", 8);
+        self._check("des", 512);
+        self._check("bookImg", 256);
+        self._check("downBookUrl", 256);
+        self._check("downMuluUrl", 256);
+
     def toDict(self, ignoreEmptyStr):
         attrnames = dir(self);
         d = {};
         for n in attrnames:
-            if not n.startswith("_") and n != "toDict" and n != "setUniqueKey" and n != "applyDict":
+            if not n.startswith("_") and n != "toDict" and n != "setUniqueKey" and n != "applyDict" and n != "check":
                 v = getattr(self, n);
                 if isinstance(v, str):
                     if not ignoreEmptyStr or len(v) > 0:

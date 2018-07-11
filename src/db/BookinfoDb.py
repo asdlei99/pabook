@@ -24,8 +24,8 @@ class BookinfoDb(BaseDb):
                 uniqueKey varchar(32) not null unique key,
                 title varchar(32) not null,
                 author varchar(8) not null ,
-                category varchar(32) not null,
-                des varchar(300) not null,
+                category tinyint default 0,
+                des varchar(512) not null,
                 bookImg varchar(256),
                 downBookUrl varchar(256) unique key,
                 downMuluUrl varchar(256) unique key,
@@ -81,6 +81,7 @@ class BookinfoDb(BaseDb):
         return '''delete from {} where uniqueKey = "{}"'''.format(self.tableName(), bookInfoModel.uniqueKey);
 
     def insertSql(self, bookInfoModel):
+        bookInfoModel.check();
         bookInfoDict = bookInfoModel.toDict(True);
         attrCount = len(bookInfoDict);
         mapValues = "";

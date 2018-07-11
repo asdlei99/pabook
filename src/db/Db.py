@@ -26,11 +26,12 @@ class Db:
     def executeSql(self, sql):
         try:
             self.cursor.execute(sql);
-            Log.D("[I] 执行 " + sql.strip() + " 成功");
-            return True;
+            Log.I("[I] 执行 " + sql.strip() + " 成功");
+            return True; 
         except Exception as e:
-            Log.W("[I] 执行 " + sql.strip() + " 失败");
-            Log.Exc(e);
+            if not isinstance(e, pymysql.err.IntegrityError) or len(e.args) <= 0 or e.args[0] != 1062:
+                Log.E("[I] 执行 " + sql.strip() + " 失败");
+                Log.Exc(e);
         return False;
 
     def fetchOne(self):

@@ -1,6 +1,6 @@
 #coding=utf-8
 
-from src.utils import Utils
+from src.utils import Utils, Log
 from src.db.KeyValueDb import KeyValueDb
 
 _lastBookId = None;
@@ -69,6 +69,8 @@ def nextBookId():
     _lastBookId = bookId;
 
     _kvDb.set("lastBookId", str(_lastBookId));
+
+    Log.D(" generate new bookId " + str(bookId));
 
     return bookId;
 

@@ -109,6 +109,9 @@ class _Log:
     def Exc(self, e):
         self.E(str(traceback.format_exc()));
 
+    def traceback():
+        return str(traceback.format_exc());
+
     def E(self, msg):
         filePath = None;
         if self.errorDir != None:

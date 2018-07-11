@@ -74,6 +74,8 @@ def createDir(dirPath):
 #GET请求
 
 def readUrl(url, retryLimit = 10):
+    if url == None:
+        return None;
     res = None;
     times = 0;
     while res == None and times < retryLimit:
@@ -96,6 +98,8 @@ def readUrl(url, retryLimit = 10):
 
 
 def soupUrl(url):
+    if url == None:
+        return None;
     content = readUrl(url);
     if content == None:
         return None;
@@ -107,6 +111,8 @@ def isSoupStr(str):
 
 
 def normalizeUrl(url):
+    if url == None:
+        return None;
     u = url;
     while u.endswith(os.sep):
         u = u[:-1];
@@ -124,21 +130,18 @@ def absoluteUrl(url, fromUrl, rootUrl):
         return normalizeUrl(fromUrl) + os.sep + url;
     return None;
 
-
-def deduplicateList(list):
-    return list(set(list));
-
-
 def isMatch(pat, text):
+    if pat == None or text == None:
+        return False;
     return re.compile(pat).match(text) != None;
 
-
 def findAll(pat, text):
+    if pat == None or text == None:
+        return False;
     return re.compile(pat).findall(text);
 
-
 def replaceAll(content, pat, replace):
-    if content == None:
+    if content == None or pat == None or text == None:
         return;
     return re.sub(pat, replace, content);
 
