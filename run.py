@@ -37,6 +37,7 @@ def dropAllTables():
 def test():
     Log.D("--test--");
     dropAllTables();
+    sys.exit(0)
 
 # 将Config.sample.py复制出一个Config.py文件
 def createConfigFile():
